@@ -1,0 +1,138 @@
+---
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth >= 2);
+---
+
+{items.length > 0 && (
+	<nav class="toc">
+		<h2 class="toc-title pixel-title">目录</h2>
+		<ul class="toc-list">
+			{items.map((h) => (
+				<li class={`toc-item depth-${h.depth}`}>
+					<a href={`#${h.slug}`}>{h.text}</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+)}
+
+<script>
+	(() => {
+		const links = Array.from(
+			document.querySelectorAll<HTMLAnchorElement>('.toc-list a'),
+		);
+		if (!links.length) return;
+
+		const headings = new Map<string, HTMLElement>();
+		for (const link of links) {
+			const id = decodeURIComponent(link.getAttribute('href')!.slice(1));
+			const el = document.getElementById(id);
+			if (el) headings.set(id, el);
+		}
+
+		const setActive = (id: string | null) => {
+			for (const link of links) {
+				const active =
+					id !== null && link.getAttribute('href') === `#${id}`;
+				link.classList.toggle('active', active);
+			}
+		};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						setActive(entry.target.id);
+						break;
+					}
+				}
+			},
+			{ rootMargin: '-20% 0px -70% 0px', threshold: 0 },
+		);
+
+		for (const el of headings.values()) observer.observe(el);
+	})();
+</script>
+
+<style>
+	.toc {
+		position: fixed;
+		top: calc(var(--header-h) + 2.75rem);
+		bottom: 1.5rem;
+		width: var(--rail-width);
+		right: max(1.25rem, calc((100vw - var(--layout-cap)) / 2 + 1.25rem));
+		overflow-y: auto;
+		padding-left: 0.85rem;
+		border-left: 3px solid var(--text);
+	}
+
+	.toc-title {
+		margin: 0 0 0.6rem;
+		font-size: var(--fs-sm);
+	}
+
+	.toc-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.toc-item {
+		margin: 0.15rem 0;
+	}
+
+	.toc-item a {
+		position: relative;
+		display: block;
+		padding: 0.22rem 0 0.22rem 1.1rem;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-sm);
+		line-height: 1.5;
+		color: var(--text-soft);
+		text-decoration: none;
+	}
+
+	.toc-item a::before {
+		content: '▸';
+		position: absolute;
+		left: 0.1rem;
+		color: var(--accent);
+		opacity: 0;
+		transition: opacity 0.06s steps(2);
+	}
+
+	.toc-item a:hover {
+		color: var(--accent);
+		
+	}
+
+	.toc-item a:hover::before {
+		opacity: 1;
+	}
+
+	.toc-item a.active {
+		color: var(--accent);
+	}
+
+	.toc-item a.active::before {
+		opacity: 1;
+	}
+
+	.toc-item.depth-3 a {
+		padding-left: 1.9rem;
+	}
+
+	.toc-item.depth-4 a {
+		padding-left: 2.7rem;
+	}
+</style>

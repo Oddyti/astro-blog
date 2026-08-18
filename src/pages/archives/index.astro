@@ -1,0 +1,111 @@
+---
+import { SITE_TITLE } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { postPath } from '../../lib/paths';
+import { getAllPosts } from '../../lib/posts';
+
+const posts = await getAllPosts();
+
+const byYear = new Map<number, typeof posts>();
+for (const post of posts) {
+	const year = post.data.date.getFullYear();
+	if (!byYear.has(year)) byYear.set(year, []);
+	byYear.get(year)!.push(post);
+}
+
+const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
+---
+
+<BaseLayout title={`归档 | ${SITE_TITLE}`} description="按照年份整理的时间线">
+	<h1 class="page-title">归档</h1>
+	<div class="archives">
+		{
+			years.map(([year, yearPosts]) => (
+				<section class="year" id={String(year)}>
+					<h2 class="year-title pixel-title">
+						{year}
+						<span class="year-count">{yearPosts.length} 篇</span>
+					</h2>
+					<ul class="archive-list">
+						{
+							yearPosts.map((post) => (
+								<li>
+									<a class="row-link" href={postPath(post)}>
+										<span class="date">
+											{post.data.date.toLocaleDateString('zh-CN', {
+												month: 'long',
+												day: 'numeric',
+											})}
+										</span>
+										<span class="title">{post.data.title}</span>
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</section>
+			))
+		}
+	</div>
+</BaseLayout>
+
+<style>
+	.year {
+		margin-bottom: 2.2rem;
+	}
+
+	.year-title {
+		margin: 0 0 0.5rem;
+		font-size: var(--fs-lg);
+		border-bottom: none;
+	}
+
+	.year-count {
+		margin-left: 0.5em;
+		font-size: var(--fs-xs);
+		font-weight: 400;
+		color: var(--text-soft);
+		vertical-align: 0.1em;
+	}
+
+	.archive-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.archive-list li {
+		border-bottom: 2px dashed var(--border);
+		margin: 0;
+	}
+
+	.archive-list a {
+		display: flex;
+		align-items: baseline;
+		gap: 1rem;
+		padding: 0.7rem 0.2rem 0.7rem 1.4rem;
+		color: var(--text);
+		text-decoration: none;
+	}
+
+	.archive-list a:hover {
+		color: var(--accent);
+		
+	}
+
+	.archive-list .date {
+		flex-shrink: 0;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-sm);
+		color: var(--text-soft);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.archive-list .title {
+		flex: 1;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-md);
+		letter-spacing: 0.04em;
+		line-height: 1.6;
+	}
+</style>

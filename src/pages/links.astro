@@ -1,0 +1,72 @@
+---
+import { FRIEND_LINKS, SITE_TITLE } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title={`友链 | ${SITE_TITLE}`} description="认识的朋友们">
+	<h1 class="page-title">友链</h1>
+	<ul class="link-list">
+		{
+			FRIEND_LINKS.map((link) => (
+				<li>
+					<a class="link-card pixel-press" href={link.website} target="_blank" rel="noopener noreferrer">
+						<img class="avatar pixel-avatar" src={link.image} alt="" loading="lazy" />
+						<span class="info">
+							<span class="name">{link.title}</span>
+							<span class="description">{link.description}</span>
+						</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</BaseLayout>
+
+<style>
+	.link-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.9rem;
+	}
+
+	.link-card {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: var(--card-pad);
+		border: 2px solid var(--border);
+		background: var(--bg);
+		color: var(--text);
+		text-decoration: none;
+	}
+
+	.link-card:hover {
+		border-color: var(--accent);
+	}
+
+	.avatar {
+		width: 48px;
+		height: 48px;
+		flex-shrink: 0;
+	}
+
+	.info {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+		min-width: 0;
+	}
+
+	.name {
+		font-family: var(--font-pixel);
+		font-size: var(--fs-md);
+		letter-spacing: 0.08em;
+	}
+
+	.description {
+		font-size: var(--fs-md);
+		color: var(--text-soft);
+	}
+</style>

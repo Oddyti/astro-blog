@@ -1,0 +1,172 @@
+/* prose.css — 只负责 markdown 文章正文（渲染出的 HTML 元素）的排版。
+   作用域限定在 .prose 容器内，与站点全局样式（global.css）完全分离。
+   像素风：方角、硬阴影、像素分隔线。 */
+
+.prose {
+	overflow-wrap: break-word;
+	max-width: var(--content-width);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+	margin: 1.8em 0 0.6em;
+	line-height: 1.4;
+	font-weight: 400;
+	font-family: var(--font-pixel);
+	color: var(--text);
+}
+
+.prose h1 {
+	font-size: var(--fs-2xl);
+}
+
+.prose h2 {
+	font-size: var(--fs-xl);
+	padding-bottom: 0.35em;
+	border-bottom: 3px solid var(--accent);
+}
+
+.prose h3 {
+	font-size: var(--fs-lg);
+}
+
+.prose h4 {
+	font-size: var(--fs-base);
+}
+
+.prose p {
+	margin: 0 0 1.2em;
+}
+
+.prose ul,
+.prose ol {
+	margin: 0 0 1.2em;
+	padding-left: 1.6em;
+}
+
+.prose li {
+	margin-bottom: 0.3em;
+}
+
+/* 正文链接：像素下划线，hover 高亮（全局 a:hover 已做背景块） */
+.prose a {
+	box-shadow: inset 0 -3px 0 var(--accent-soft);
+}
+
+.prose a:hover {
+	box-shadow: inset 0 -1.2em 0 var(--accent-soft);
+}
+
+.prose blockquote {
+	margin: 1.4em 0;
+	padding: 0.75em 1.2em;
+	border: 2px solid var(--text);
+	border-left: 6px solid var(--accent);
+	background: var(--bg-soft);
+	color: var(--text);
+}
+
+.prose blockquote p {
+	margin: 0.6em 0;
+}
+
+.prose hr {
+	border: none;
+	height: 10px;
+	margin: 2.5em 0;
+	background-image: repeating-linear-gradient(
+		to right,
+		var(--text-soft) 0 8px,
+		transparent 8px 20px
+	);
+	opacity: 0.5;
+}
+
+.prose img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	max-height: 70vh;
+	border: 2px solid var(--text);
+}
+
+.prose table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.4em 0;
+	font-size: 0.95em;
+}
+
+.prose th,
+.prose td {
+	border: 2px solid var(--border);
+	padding: 0.45em 0.8em;
+	text-align: left;
+}
+
+.prose th {
+	background: var(--bg-soft);
+	font-family: var(--font-pixel);
+	font-weight: 400;
+}
+
+.prose code {
+	font-family: var(--font-mono);
+	font-size: 0.88em;
+	padding: 0.15em 0.4em;
+	background: var(--bg-soft);
+	border: 2px solid var(--border);
+}
+
+.prose pre {
+	margin: 1.4em 0;
+	padding: 1.1em 1.3em;
+	border: 2px solid var(--text);
+	overflow-x: auto;
+	line-height: 1.6;
+}
+
+.prose pre code {
+	padding: 0;
+	background: none;
+	border: none;
+	font-size: 0.86em;
+}
+
+/* B站视频内嵌（由 remark 插件生成，位于文章正文内） */
+.prose .video-container {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	margin: 1.4em 0;
+	border: 2px solid var(--text);
+	overflow: hidden;
+}
+
+.prose .video-container iframe {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+/* KaTeX 公式：行内垂直对齐 + 块级横向溢出滚动 */
+.prose .katex {
+	font-size: 1.05em;
+}
+
+.prose .katex-display {
+	margin: 1.2em 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0.4em 0;
+	text-align: center;
+}

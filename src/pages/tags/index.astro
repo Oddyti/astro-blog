@@ -1,0 +1,65 @@
+---
+import { SITE_TITLE } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { tagPath } from '../../lib/paths';
+import { getAllPosts, getTagCounts } from '../../lib/posts';
+
+const posts = await getAllPosts();
+const tags = getTagCounts(posts);
+---
+
+<BaseLayout title={`标签 | ${SITE_TITLE}`} description="分类看不懂的话，来这儿看看">
+	<h1 class="page-title">标签</h1>
+	<ul class="tag-list">
+		{
+			tags.map(([tag, count]) => (
+				<li>
+					<a href={tagPath(tag)}>
+						<span class="label">#{tag}</span>
+						<span class="count">{count}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</BaseLayout>
+
+<style>
+	.tag-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+	}
+
+	.tag-list a {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.4rem;
+		padding: 0.4rem 0.75rem;
+		border: 2px solid var(--border);
+		background: var(--bg);
+		color: var(--text);
+		text-decoration: none;
+	}
+
+	.tag-list a:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.tag-list .label {
+		font-family: var(--font-pixel);
+		font-size: var(--fs-sm);
+		letter-spacing: 0.06em;
+	}
+
+	.tag-list .count {
+		font-family: var(--font-pixel);
+		font-size: var(--fs-xs);
+		color: var(--text-soft);
+		font-variant-numeric: tabular-nums;
+	}
+</style>

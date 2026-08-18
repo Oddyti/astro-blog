@@ -1,0 +1,58 @@
+---
+import { CATEGORIES, SITE_TITLE } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { filterCategories, getAllPosts } from '../../lib/posts';
+
+export async function getStaticPaths() {
+	const posts = await getAllPosts();
+	const names = new Set<string>();
+	for (const post of posts) {
+		for (const cat of filterCategories(post.data.categories)) {
+			names.add(cat);
+		}
+	}
+	return [...names].map((name) => ({
+		params: { category: name },
+		props: { name },
+	}));
+}
+
+const { name } = Astro.props;
+const posts = (await getAllPosts()).filter((post) =>
+	filterCategories(post.data.categories).includes(name),
+);
+
+const meta = CATEGORIES[name];
+---
+
+<BaseLayout
+	title={`${name} | ${SITE_TITLE}`}
+	description={meta?.description ?? ''}
+>
+	<header class="category-header">
+		<h1 class="page-title page-title--tight">{name}</h1>
+		{meta?.description && <p class="description">{meta.description}</p>}
+		<p class="count">{posts.length} 篇文章</p>
+	</header>
+	<PostList posts={posts} />
+</BaseLayout>
+
+<style>
+	.category-header {
+		margin-bottom: 1.5rem;
+	}
+
+	.description {
+		margin: 0 0 0.3rem;
+		color: var(--text-soft);
+		font-size: var(--fs-md);
+	}
+
+	.count {
+		margin: 0;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-xs);
+		color: var(--text-soft);
+	}
+</style>

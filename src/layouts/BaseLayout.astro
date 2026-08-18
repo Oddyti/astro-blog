@@ -1,0 +1,42 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import PagefindConfig from 'astro-pagefind/components/PagefindConfig.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	rail?: boolean;
+}
+
+const { title, description, rail = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={title} description={description} />
+		<slot name="head" />
+	</head>
+	<body>
+		<PagefindConfig lang="zh-CN" />
+		<Header />
+		<main class={rail ? 'layout layout--rail' : 'layout'}>
+			<Sidebar />
+			<div class="main-column">
+				<div class="main-content">
+					<slot />
+				</div>
+				<Footer />
+			</div>
+			{rail && (
+				<div class="rail">
+					<slot name="rail" />
+				</div>
+			)}
+		</main>
+		<pagefind-modal></pagefind-modal>
+	</body>
+</html>

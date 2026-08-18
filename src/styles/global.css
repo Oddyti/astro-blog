@@ -1,0 +1,575 @@
+/* global.css — 站点级全局样式（像素风配色变量、页面骨架、链接、通用标题）。
+   注意：markdown 文章正文的排版不在这里，见 prose.css。 */
+
+/* 像素字体：Fusion Pixel 12px Monospaced SC（缝合像素，自托管）。
+   latin / zh_hans 拆分，浏览器按需下载。 */
+@font-face {
+	font-family: 'Fusion Pixel';
+	src: url('/fonts/fusion-pixel-12px-monospaced-latin.otf.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+	unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2190-21FF;
+}
+
+@font-face {
+	font-family: 'Fusion Pixel';
+	src: url('/fonts/fusion-pixel-12px-monospaced-zh_hans.otf.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+	unicode-range: U+3000-303F, U+4E00-9FFF, U+FF00-FFEF;
+}
+
+:root {
+	--bg: #f5f5fa;
+	--bg-soft: #ececf5;
+	--text: #264653;
+	--text-soft: #6b7a80;
+	--border: #dddde8;
+	--accent: #2c9d8f;
+	--accent-soft: rgba(44, 157, 143, 0.13);
+	--font-sans:
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+		'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC',
+		'Helvetica Neue', Arial, sans-serif;
+	--font-pixel: 'Fusion Pixel', 'Fusion Pixel 12px Monospaced SC', monospace;
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas,
+		'Liberation Mono', monospace;
+	--content-width: 720px;
+	--sidebar-width: 240px;
+	--rail-width: 220px;
+	--layout-cap: 1360px;
+	--header-h: 70px;
+	--radius: 0;
+	--pixel: 4px;
+	--pixel-text-shadow: 2px 2px 0 rgba(38, 70, 83, 0.2);
+	--card-pad: 0.9rem 1.1rem;
+	--accent-bar: 6px;
+	/* 字号阶梯（px，像素字体 12px 起跳） */
+	--fs-xs: 12px;
+	--fs-sm: 13px;
+	--fs-md: 14px;
+	--fs-base: 16px;
+	--fs-lg: 18px;
+	--fs-xl: 24px;
+	--fs-2xl: 30px;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	scrollbar-gutter: stable;
+}
+
+/* 全站统一像素风滚动条：作用于所有滚动容器（页面/导航/目录/代码块/搜索框）
+   Webkit（Chrome/Edge/Safari）+ Firefox 双实现 */
+::-webkit-scrollbar {
+	width: 14px;
+	height: 14px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--bg-soft);
+	border-left: 2px solid var(--border);
+	border-top: 2px solid var(--border);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--accent);
+	border: 3px solid var(--bg-soft);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--text);
+}
+
+::-webkit-scrollbar-corner {
+	background: var(--bg-soft);
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--accent) var(--bg-soft);
+}
+
+body {
+	margin: 0;
+	background-color: var(--bg);
+	background-image: radial-gradient(
+		var(--border) 1px,
+		transparent 1px
+	);
+	background-size: 22px 22px;
+	color: var(--text);
+	font-family: var(--font-sans);
+	font-size: var(--fs-base);
+	line-height: 1.75;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+
+::selection {
+	background: var(--accent);
+	color: var(--bg);
+}
+
+a {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+/* 统一像素交互模式：
+   .pixel-press — 卡片/按钮按压（无位移，hover 仅过渡颜色/边框）
+   .pixel-fill  — 反色填充按钮（hover 实心反色 + 位移）
+   .row-link    — 列表行：hover 高亮 + ▸ 箭头标记
+   设计约定：全站不用阴影，按压感由位移承担 */
+.pixel-press {
+	transition:
+		background 0.06s steps(2),
+		color 0.06s steps(2),
+		border-color 0.06s steps(2);
+}
+
+.pixel-fill {
+	border: 2px solid var(--accent);
+	background: var(--bg);
+	color: var(--accent);
+	transition:
+		transform 0.06s steps(2),
+		background 0.06s steps(2),
+		color 0.06s steps(2);
+}
+
+.pixel-fill:hover {
+	background: var(--accent);
+	color: var(--bg);
+}
+
+.pixel-fill:active {
+	background: var(--accent);
+	color: var(--bg);
+}
+
+.row-link {
+	position: relative;
+	transition:
+		background 0.06s steps(2),
+		color 0.06s steps(2);
+}
+
+.row-link::before {
+	content: '▸';
+	position: absolute;
+	left: 0.15rem;
+	font-family: var(--font-pixel);
+	font-size: var(--fs-sm);
+	color: var(--accent);
+	opacity: 0;
+	transition: opacity 0.06s steps(2);
+}
+
+.row-link:hover {
+	background: var(--accent-soft);
+	color: var(--accent);
+}
+
+.row-link:hover::before {
+	opacity: 1;
+}
+
+/* 分类卡片（首页/分类页共用同一套）：
+   li.cat-card + 内层 a（带分类色条） */
+.cat-cards {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.9rem;
+}
+
+.cat-card {
+	background: var(--bg);
+	border: 2px solid var(--text);
+}
+
+.cat-card:hover {
+	border-color: var(--accent);
+}
+
+.cat-card a {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	height: 100%;
+	padding: var(--card-pad);
+	border-left: var(--accent-bar) solid var(--cat-color);
+	color: var(--text);
+	text-decoration: none;
+}
+
+.cat-card .cat-name {
+	font-family: var(--font-pixel);
+	font-size: var(--fs-base);
+	letter-spacing: 0.1em;
+	color: var(--cat-color);
+}
+
+.cat-card .cat-count {
+	font-family: var(--font-pixel);
+	font-size: var(--fs-xs);
+	color: var(--text-soft);
+}
+
+.cat-card .cat-desc {
+	font-size: var(--fs-md);
+	color: var(--text-soft);
+	line-height: 1.6;
+}
+
+@media (max-width: 520px) {
+	.cat-cards {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* 分类/标签徽章（文章卡片/文章详情页共用） */
+.chip {
+	display: inline-block;
+	font-family: var(--font-pixel);
+	font-size: var(--fs-sm);
+	letter-spacing: 0.04em;
+	padding: 0 0 0.05em;
+	text-decoration: none;
+}
+
+.chip-cat {
+	color: var(--accent);
+	background: var(--accent-soft);
+	border: 2px solid var(--accent);
+	padding: 0.1em 0.55em;
+}
+
+.chip-cat:hover {
+	background: var(--accent);
+	color: var(--bg);
+}
+
+.chip-tag {
+	color: var(--text-soft);
+	border-bottom: 2px solid var(--border);
+}
+
+.chip-tag:hover {
+	color: var(--accent);
+	border-bottom-color: var(--accent);
+}
+
+/* 三栏骨架：左侧固定侧边栏 + 中间正文（占剩余空间，正文限宽居中）+
+   右侧辅助栏（文章页为目录，可选）。整体限宽居中，不铺满视口。 */
+main.layout {
+	min-height: calc(100vh - var(--header-h));
+	max-width: var(--layout-cap);
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+	gap: 3.5rem;
+	padding: 2.75rem 1.25rem 0;
+}
+
+main.layout--rail {
+	grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--rail-width);
+}
+
+main.layout .main-column {
+	grid-column: 2;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+main.layout .main-content {
+	flex: 1;
+	padding-bottom: 3rem;
+}
+
+main.layout--rail .main-column {
+	max-width: var(--content-width);
+	justify-self: center;
+}
+
+main.layout--rail .rail {
+	grid-column: 3;
+	min-width: 0;
+}
+
+/* 页脚放在正文列内，宽度自然继承正文宽度 */
+main.layout .site-footer {
+	margin-top: 0;
+}
+
+/* 左侧侧边栏：初始即钉在正文起始处，正文滚动时不动，
+   正文滚到底后随页面继续滚动露出侧边栏底部溢出 */
+main.layout .sidebar {
+	position: sticky;
+	top: calc(var(--header-h) + 2.75rem);
+	align-self: start;
+	width: var(--sidebar-width);
+}
+
+/* 视口不足以容纳侧边栏时隐藏，正文回到居中单栏 */
+@media (max-width: 1120px) {
+	main.layout,
+	main.layout--rail {
+		grid-template-columns: 1fr;
+		justify-content: center;
+		gap: 0;
+	}
+
+	main.layout .sidebar,
+	main.layout--rail .rail {
+		display: none;
+	}
+}
+
+/* 站点级标题基础（页面标题等），文章正文标题由 prose.css 覆盖。
+   统一使用像素字体 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0 0 0.6em;
+	line-height: 1.4;
+	font-weight: 400;
+	font-family: var(--font-pixel);
+	color: var(--text);
+	text-shadow: var(--pixel-text-shadow);
+}
+
+h1 {
+	font-size: var(--fs-2xl);
+}
+
+h2 {
+	font-size: var(--fs-xl);
+}
+
+h3 {
+	font-size: var(--fs-lg);
+}
+
+h4 {
+	font-size: var(--fs-base);
+}
+
+/* 各页面共用的大标题（文章/分类/标签/归档/友链）。
+   自带底部留白，页面无需再写重复样式 */
+.page-title {
+	margin: 0 0 1.5rem;
+	border-bottom: none;
+	font-size: var(--fs-2xl);
+}
+
+/* 详情页标题紧贴下方信息，用此修饰符收窄留白 */
+.page-title--tight {
+	margin-bottom: 0.4rem;
+}
+
+/* 区块标题基类：像素字体 + ■ 前缀（首页/侧边栏/归档/TOC 通用）。
+   各组件只需覆盖字号/间距 */
+.pixel-title {
+	margin: 0 0 0.75rem;
+	font-family: var(--font-pixel);
+	font-size: var(--fs-sm);
+	letter-spacing: 0.15em;
+	color: var(--text);
+	text-shadow: var(--pixel-text-shadow);
+}
+
+.pixel-title::before {
+	content: '■';
+	display: inline-block;
+	margin-right: 0.45em;
+	color: var(--accent);
+}
+
+/* 头像框基类：像素化渲染 + 粗边框（无阴影） */
+.pixel-avatar {
+	object-fit: cover;
+	image-rendering: pixelated;
+	background: var(--bg-soft);
+	border: 2px solid var(--text);
+}
+
+/* 组件类型 → 类名规范（新增页面时对号入座）：
+   卡片      → .pixel-press + 2px solid var(--text) 边框 [+ 可选 --accent-bar 色条]
+   按钮      → .pixel-fill
+   列表行    → .row-link + 2px dashed 分隔
+   区块标题  → .pixel-title（■ 前缀）
+   页面大标题 → .page-title
+   徽章      → .pixel-fill
+   头像      → .pixel-avatar
+   纯文字链接 → hover 变 accent（全局约定） */
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+/* Pagefind 搜索模态框（全局组件）
+   触发器：导航栏内的像素搜索图标按钮 */
+pagefind-modal-trigger {
+	--pf-icon-search: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20x%3D%2724%27%20y%3D%278%27%20width%3D%2724%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2716%27%20y%3D%2712%27%20width%3D%2716%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2712%27%20width%3D%2716%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2712%27%20y%3D%2716%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2748%27%20y%3D%2716%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2720%27%20width%3D%2712%27%20height%3D%278%27%2F%3E%3Crect%20x%3D%2752%27%20y%3D%2720%27%20width%3D%2712%27%20height%3D%278%27%2F%3E%3Crect%20x%3D%274%27%20y%3D%2728%27%20width%3D%2712%27%20height%3D%2716%27%2F%3E%3Crect%20x%3D%2756%27%20y%3D%2728%27%20width%3D%2712%27%20height%3D%2716%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2744%27%20width%3D%2712%27%20height%3D%278%27%2F%3E%3Crect%20x%3D%2752%27%20y%3D%2744%27%20width%3D%2712%27%20height%3D%278%27%2F%3E%3Crect%20x%3D%2712%27%20y%3D%2752%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2748%27%20y%3D%2752%27%20width%3D%2712%27%20height%3D%278%27%2F%3E%3Crect%20x%3D%2716%27%20y%3D%2756%27%20width%3D%2716%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2756%27%20width%3D%278%27%20height%3D%278%27%2F%3E%3Crect%20x%3D%2724%27%20y%3D%2760%27%20width%3D%2716%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2752%27%20y%3D%2760%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2756%27%20y%3D%2764%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2760%27%20y%3D%2768%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2764%27%20y%3D%2772%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2768%27%20y%3D%2776%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2772%27%20y%3D%2780%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2776%27%20y%3D%2784%27%20width%3D%2712%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%2780%27%20y%3D%2788%27%20width%3D%278%27%20height%3D%274%27%2F%3E%3C%2Fsvg%3E");
+}
+
+pagefind-modal-trigger .pf-trigger-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: auto;
+	height: auto;
+	padding: 0.4rem 0.6rem;
+	background: transparent;
+	border: 2px solid transparent;
+	border-radius: 0;
+	color: var(--text-soft);
+	cursor: pointer;
+}
+
+pagefind-modal-trigger .pf-trigger-btn:hover {
+	background: var(--accent-soft);
+	border-color: var(--accent);
+	color: var(--accent);
+}
+
+pagefind-modal-trigger .pf-trigger-icon {
+	width: 18px;
+	height: 18px;
+	background: currentColor;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+/* Pagefind 搜索模态框（全局组件）
+   主题变量统一为站点 token，暗色模式自动跟随 */
+pagefind-modal,
+pagefind-modal-trigger {
+	--pf-text: var(--text);
+	--pf-text-secondary: var(--text-soft);
+	--pf-text-muted: var(--text-soft);
+	--pf-background: var(--bg);
+	--pf-border: var(--border);
+	--pf-border-focus: var(--accent);
+	--pf-hover: var(--bg-soft);
+	--pf-mark: var(--accent);
+	--pf-outline-focus: var(--accent);
+	--pf-border-radius: 0;
+	--pf-font: var(--font-sans);
+	--pf-input-height: 44px;
+	--pf-input-font-size: 16px;
+	--pf-summary-font-size: 12px;
+	--pf-result-title-font-size: 15px;
+	--pf-result-excerpt-font-size: 13px;
+	--pf-modal-max-width: 620px;
+	--pf-modal-max-height: min(80dvh, 760px);
+	--pf-modal-top: 8dvh;
+	--pf-modal-backdrop: rgba(16, 19, 26, 0.55);
+	--pf-shadow-lg: none;
+	--pf-shadow-md: none;
+	--pf-shadow-sm: none;
+	--pf-skeleton: var(--bg-soft);
+	--pf-scroll-shadow: transparent;
+}
+
+/* 模态框：非全屏居中，方角像素风。
+   Pagefind 内部选择器带 :is(*,#\#)×3 高特异性且圆角为字面量，
+   需用 !important 覆盖 */
+pagefind-modal dialog.pf-modal {
+	border-radius: 0 !important;
+	border: 2px solid var(--text) !important;
+}
+
+pagefind-modal .pf-modal-header {
+	border-bottom: 2px dashed var(--border);
+}
+
+pagefind-modal .pf-modal-header .pf-input {
+	font-family: var(--font-pixel);
+	letter-spacing: 0.04em;
+}
+
+pagefind-modal .pf-result-card {
+	border: 2px solid var(--border) !important;
+	border-radius: 0 !important;
+}
+
+pagefind-modal .pf-result-card:hover {
+	border-color: var(--accent);
+}
+
+pagefind-modal .pf-result-title {
+	font-family: var(--font-pixel);
+}
+
+pagefind-modal .pf-heading-chip {
+	border: 2px solid var(--border) !important;
+	border-radius: 0 !important;
+	font-family: var(--font-pixel);
+	font-size: 12px;
+}
+
+pagefind-modal .pf-heading-chip:hover {
+	border-color: var(--accent);
+}
+
+pagefind-modal .pf-heading-link {
+	font-family: var(--font-pixel);
+}
+
+pagefind-modal mark {
+	background: var(--pf-mark);
+	color: var(--bg);
+}
+
+pagefind-modal .pf-keyboard-hint,
+pagefind-modal .pf-keyboard-key,
+pagefind-modal .pf-modal-footer-hint,
+pagefind-modal .pf-modal-footer-key {
+	font-family: var(--font-pixel);
+}
+
+pagefind-modal .pf-modal-close {
+	border-radius: 0 !important;
+	border: 2px solid var(--border) !important;
+	background: var(--bg);
+	color: var(--text);
+}
+
+pagefind-modal .pf-modal-close:hover {
+	border-color: var(--accent);
+	color: var(--accent);
+}
+
+/* Shiki 代码高亮 */
+/* Shiki 会给 pre 注入主题背景内联样式，强制透明以露出页面底色 */
+.prose pre.astro-code {
+	background-color: transparent !important;
+}

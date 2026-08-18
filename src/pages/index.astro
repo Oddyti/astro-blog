@@ -1,0 +1,163 @@
+---
+import PostList from '../components/PostList.astro';
+import { CATEGORIES, RECOMMENDED_POSTS, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { categoryPath } from '../lib/paths';
+import { getAllPosts } from '../lib/posts';
+
+const posts = await getAllPosts();
+const recentPosts = posts.slice(0, 10);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<section class="welcome">
+		<h1 class="welcome-title">欢迎来到余地</h1>
+		<p class="welcome-text">生活有些拥挤，给胡思乱想留一点余地。</p>
+	</section>
+
+	<section class="about-site">
+		<h2 class="section-title pixel-title">关于这儿</h2>
+		<p class="intro">
+			这里是我的博客小站，生活有些拥挤，这里也是我给自己胡思乱想留的一片
+			<strong>余地</strong>。
+		</p>
+		<ul class="cat-cards">
+			{
+				Object.entries(CATEGORIES).map(([name, meta]) => (
+					<li
+						class="cat-card pixel-press"
+						style={`--cat-color: ${meta.color}`}
+					>
+						<a href={categoryPath(name)}>
+							<span class="cat-name">{name}</span>
+							<span class="cat-desc">{meta.description}</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section class="recommended">
+		<h2 class="section-title pixel-title">推荐阅读</h2>
+		<ul class="recommended-list">
+			{
+				RECOMMENDED_POSTS.map((item) => (
+					<li>
+						<a class="row-link" href={item.href}>{item.label} →</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section class="recent">
+		<h2 class="section-title pixel-title">近期文章</h2>
+		<PostList posts={recentPosts} />
+		<p class="more">
+			<a class="pixel-fill" href="/posts/">查看全部文章 →</a>
+		</p>
+	</section>
+</BaseLayout>
+
+<style>
+	.welcome {
+		padding: 1rem 0 2rem;
+		text-align: center;
+	}
+
+	.welcome-title {
+		display: inline-block;
+		margin: 0 0 0.8em;
+		font-size: var(--fs-xl);
+		letter-spacing: 0.15em;
+		text-indent: 0.15em;
+		color: var(--text);
+		white-space: nowrap;
+		overflow: hidden;
+		/* 打字机：宽度渐显文字 + 光标 */
+		animation:
+			typing 2.6s steps(5, end) infinite,
+			blink 0.8s steps(1) infinite;
+		width: 7.5em;
+		border-right: 3px solid var(--accent);
+	}
+
+	@keyframes typing {
+		0% {
+			width: 0;
+		}
+		80%,
+		100% {
+			width: 7.5em;
+		}
+	}
+
+	@keyframes blink {
+		50% {
+			border-color: transparent;
+		}
+	}
+
+	.welcome-text {
+		margin: 0;
+		color: var(--text);
+		font-size: var(--fs-base);
+	}
+
+	.about-site .intro {
+		margin: 0 0 1rem;
+	}
+
+	.section-title {
+		font-size: var(--fs-lg);
+		border-bottom: none;
+	}
+
+	.more {
+		margin: 1.2rem 0 0;
+		text-align: right;
+	}
+
+	.more a {
+		display: inline-block;
+		padding: 0.45rem 0.8rem;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-xs);
+		text-decoration: none;
+	}
+
+	.more a:hover {
+	}
+
+	.recommended {
+		margin-top: 2.2rem;
+	}
+
+	.recommended-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.recommended-list li {
+		border-bottom: 2px dashed var(--border);
+		margin: 0;
+	}
+
+	.recommended-list a {
+		display: block;
+		padding: 0.7rem 0.2rem 0.7rem 1.4rem;
+		color: var(--text);
+		text-decoration: none;
+	}
+
+	.recommended-list a:hover {
+		color: var(--accent);
+		
+	}
+
+	.recent {
+		margin-top: 2.2rem;
+	}
+</style>

@@ -1,0 +1,28 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Pagination from '../../components/Pagination.astro';
+import PostList from '../../components/PostList.astro';
+import { SITE_TITLE } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllPosts } from '../../lib/posts';
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const posts = await getAllPosts();
+	return paginate(posts, { pageSize: 10 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<BaseLayout
+	title={
+		page.currentPage > 1
+			? `文章 · 第 ${page.currentPage} 页 | ${SITE_TITLE}`
+			: `文章 | ${SITE_TITLE}`
+	}
+	description="所有的内容都在这儿了"
+>
+	<h1 class="page-title">文章</h1>
+	<PostList posts={page.data} />
+	<Pagination page={page} basePath="/posts/" />
+</BaseLayout>

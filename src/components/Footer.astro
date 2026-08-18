@@ -1,0 +1,57 @@
+---
+import { SITE_OWNER, SITE_SINCE } from '../consts';
+---
+
+<footer class="site-footer">
+	<div class="footer-inner">
+		<p class="copyright">
+			&copy; {SITE_SINCE}&ndash;{new Date().getFullYear()} {SITE_OWNER}
+		</p>
+		<p class="built">
+			由 <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a> 构建
+		</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 2px solid var(--text);
+	}
+
+	.footer-inner {
+		margin: 0;
+		padding: 1.75rem 0 2.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.copyright {
+		margin: 0;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-xs);
+		letter-spacing: 0.06em;
+		color: var(--text-soft);
+	}
+
+	.built {
+		margin: 0;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-xs);
+		letter-spacing: 0.06em;
+		color: var(--text-soft);
+	}
+
+	.built a {
+		color: var(--text-soft);
+		text-decoration: none;
+	}
+
+	.built a:hover {
+		color: var(--accent);
+		
+		
+	}
+</style>

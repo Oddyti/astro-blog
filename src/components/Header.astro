@@ -1,0 +1,71 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+---
+
+<header class="site-header">
+	<div class="header-inner">
+		<a class="site-title pixel-press" href="/">{SITE_TITLE}</a>
+		<nav>
+			<HeaderLink href="/">主页</HeaderLink>
+			<HeaderLink href="/posts/">文章</HeaderLink>
+			<HeaderLink href="/categories/">分类</HeaderLink>
+			<HeaderLink href="/archives/">归档</HeaderLink>
+			<HeaderLink href="/tags/">标签</HeaderLink>
+			<HeaderLink href="/about/">关于</HeaderLink>
+			<HeaderLink href="/links/">友链</HeaderLink>
+			<pagefind-modal-trigger compact aria-label="搜索" title="搜索 (Cmd+K)"></pagefind-modal-trigger>
+		</nav>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		border-bottom: 2px solid var(--text);
+		background: var(--bg);
+	}
+
+	.header-inner {
+		max-width: var(--layout-cap);
+		margin: 0 auto;
+		padding: 0.9rem 1.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	.site-title {
+		font-family: var(--font-pixel);
+		font-size: var(--fs-base);
+		letter-spacing: 0.1em;
+		color: var(--text);
+		text-decoration: none;
+		white-space: nowrap;
+		padding: 0.45rem 0.75rem;
+		border: 2px solid var(--text);
+		background: var(--bg);
+	}
+
+	.site-title:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	nav {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		overflow-x: auto;
+	}
+
+	@media (max-width: 520px) {
+		.site-title {
+			font-size: var(--fs-md);
+			padding: 0.35rem 0.55rem;
+		}
+	}
+</style>

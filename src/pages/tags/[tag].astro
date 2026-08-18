@@ -1,0 +1,46 @@
+---
+import { SITE_TITLE } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { filterTags, getAllPosts } from '../../lib/posts';
+
+export async function getStaticPaths() {
+	const posts = await getAllPosts();
+	const names = new Set<string>();
+	for (const post of posts) {
+		for (const tag of filterTags(post.data.tags)) {
+			names.add(tag);
+		}
+	}
+	return [...names].map((name) => ({
+		params: { tag: name },
+		props: { name },
+	}));
+}
+
+const { name } = Astro.props;
+const posts = (await getAllPosts()).filter((post) =>
+	filterTags(post.data.tags).includes(name),
+);
+---
+
+<BaseLayout title={`${name} | ${SITE_TITLE}`} description={`标签 #${name}`}>
+	<header class="tag-header">
+		<h1 class="page-title page-title--tight">#{name}</h1>
+		<p class="count">{posts.length} 篇文章</p>
+	</header>
+	<PostList posts={posts} />
+</BaseLayout>
+
+<style>
+	.tag-header {
+		margin-bottom: 1.5rem;
+	}
+
+	.count {
+		margin: 0;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-xs);
+		color: var(--text-soft);
+	}
+</style>

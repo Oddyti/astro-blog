@@ -1,0 +1,121 @@
+---
+import { Image } from 'astro:assets';
+import { type CollectionEntry, render } from 'astro:content';
+import 'katex/dist/katex.min.css';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Toc from '../../components/Toc.astro';
+import { LICENSE_TEXT } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { categoryPath, postSlug, tagPath } from '../../lib/paths';
+import { filterCategories, filterTags, getAllPosts } from '../../lib/posts';
+
+export async function getStaticPaths() {
+	const posts = await getAllPosts();
+	return posts.map((post) => ({
+		params: { slug: postSlug(post) },
+		props: post,
+	}));
+}
+
+type Props = CollectionEntry<'post'>;
+
+const post = Astro.props;
+const { Content, headings } = await render(post);
+const tocHeadings = headings.filter((h) => h.depth >= 2);
+
+const categories = filterCategories(post.data.categories);
+const tags = filterTags(post.data.tags);
+const showLicense = post.data.license !== false;
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} rail>
+	<article class="post">
+		<header class="post-header">
+			{post.data.image && (
+				<div class="cover">
+					<Image src={post.data.image} alt="" width={1400} />
+				</div>
+			)}
+			<h1 class="post-title">{post.data.title}</h1>
+			<div class="post-meta">
+				<span class="date">
+					<FormattedDate date={post.data.date} />
+				</span>
+				{categories.map((cat) => (
+					<a class="chip chip-cat" href={categoryPath(cat)}>
+						{cat}
+					</a>
+				))}
+				{tags.map((tag) => (
+					<a class="chip chip-tag" href={tagPath(tag)}>
+						#{tag}
+					</a>
+				))}
+			</div>
+		</header>
+
+		<div class="prose">
+			<Content />
+		</div>
+
+		{showLicense && <p class="license">{LICENSE_TEXT}</p>}
+	</article>
+
+	<div slot="rail">
+		<Toc headings={tocHeadings} />
+	</div>
+</BaseLayout>
+
+<style>
+	.post-header {
+		margin-bottom: 2rem;
+	}
+
+	.cover {
+		margin-bottom: 1.5rem;
+	}
+
+	.cover img {
+		display: block;
+		margin: 0 auto;
+		width: auto;
+		max-width: 100%;
+		height: auto;
+		max-height: 70vh;
+		border: 2px solid var(--text);
+	}
+
+	.post-title {
+		margin: 0 0 0.6rem;
+		font-size: var(--fs-2xl);
+		border-bottom: none;
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		font-family: var(--font-pixel);
+		font-size: var(--fs-md);
+		color: var(--text-soft);
+	}
+
+	.post-meta .date {
+		margin-right: 0.25rem;
+	}
+
+	.prose {
+		overflow-wrap: break-word;
+	}
+
+	.license {
+		margin-top: 3rem;
+		padding-top: 1rem;
+		border-top: 2px dashed var(--border);
+		font-family: var(--font-pixel);
+		font-size: var(--fs-xs);
+		color: var(--text-soft);
+		letter-spacing: 0.06em;
+	}
+</style>
