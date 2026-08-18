@@ -54,6 +54,9 @@
 	--fs-lg: 18px;
 	--fs-xl: 24px;
 	--fs-2xl: 30px;
+	/* 响应式断点：<768 手机端，<1024 隐藏侧边栏/目录转单栏 */
+	--bp-mobile: 768px;
+	--bp-tablet: 1024px;
 }
 
 * {
@@ -237,12 +240,6 @@ a:hover {
 	line-height: 1.6;
 }
 
-@media (max-width: 520px) {
-	.cat-cards {
-		grid-template-columns: 1fr;
-	}
-}
-
 /* 分类/标签徽章（文章卡片/文章详情页共用） */
 .chip {
 	display: inline-block;
@@ -327,8 +324,8 @@ main.layout .sidebar {
 	width: var(--sidebar-width);
 }
 
-/* 视口不足以容纳侧边栏时隐藏，正文回到居中单栏 */
-@media (max-width: 1120px) {
+/* 视口不足以容纳侧边栏/目录时隐藏，正文回到居中单栏 */
+@media (max-width: 1024px) { /* 断点 = --bp-tablet */
 	main.layout,
 	main.layout--rail {
 		grid-template-columns: 1fr;
@@ -339,6 +336,28 @@ main.layout .sidebar {
 	main.layout .sidebar,
 	main.layout--rail .rail {
 		display: none;
+	}
+
+	main.layout .main-column,
+	main.layout--rail .main-column {
+		grid-column: 1;
+		max-width: none;
+	}
+}
+
+/* 手机端：减小边距、卡片收窄、防溢出 */
+@media (max-width: 768px) {
+	/* 断点 = --bp-mobile */
+	main.layout {
+		padding: 1.75rem 1rem 0;
+	}
+
+	main.layout .main-content {
+		padding-bottom: 1.5rem;
+	}
+
+	.cat-cards {
+		grid-template-columns: 1fr;
 	}
 }
 

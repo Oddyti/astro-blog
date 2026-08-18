@@ -7,14 +7,15 @@ interface Heading {
 
 interface Props {
 	headings: Heading[];
+	mobile?: boolean;
 }
 
-const { headings } = Astro.props;
+const { headings, mobile = false } = Astro.props;
 const items = headings.filter((h) => h.depth >= 2);
 ---
 
 {items.length > 0 && (
-	<nav class="toc">
+	<nav class:list={['toc', { 'toc--mobile': mobile }]}>
 		<h2 class="toc-title pixel-title">目录</h2>
 		<ul class="toc-list">
 			{items.map((h) => (
@@ -134,5 +135,16 @@ const items = headings.filter((h) => h.depth >= 2);
 
 	.toc-item.depth-4 a {
 		padding-left: 2.7rem;
+	}
+
+	/* 移动端：目录呈现在侧滑面板内，静态定位 */
+	.toc--mobile {
+		position: static;
+		width: auto;
+		right: auto;
+		top: auto;
+		bottom: auto;
+		padding-left: 0;
+		border-left: none;
 	}
 </style>

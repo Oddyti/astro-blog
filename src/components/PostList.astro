@@ -116,9 +116,16 @@ const { posts } = Astro.props;
 		color: var(--text-soft);
 	}
 
-	@media (max-width: 520px) {
-		.chip-tag {
-			display: none;
+	/* 手机端：分类/标签挤在一行，溢出的标签自动隐藏（只显示放得下的） */
+	@media (max-width: 768px) { /* 断点 = --bp-mobile */
+		.post-card-meta {
+			flex-wrap: nowrap;
+			overflow: hidden;
+			max-height: 1.8em;
+		}
+
+		.chip {
+			flex-shrink: 0;
 		}
 	}
 </style>

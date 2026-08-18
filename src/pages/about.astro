@@ -1,11 +1,40 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { Image } from 'astro:assets';
+import { readFileSync } from 'node:fs';
+import avatar from '../assets/avatar.png';
+import { AUTHOR_NAME, SITE_SUBTITLE, SITE_TITLE, SOCIAL_LINKS } from '../consts';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const icon = (name: string) =>
+	readFileSync(`./public/${name}.svg`, 'utf-8')
+		.replace(/<\?xml[^>]*\?>/, '')
+		.replace('<svg', '<svg viewBox="0 0 96 96"')
+		.replace(/fill="#000000"/g, 'fill="currentColor"');
 ---
 
 <BaseLayout title={`关于我 | ${SITE_TITLE}`} description="关于 Oddyti 和他的小站">
-	<article class="about prose">
-		<h1>关于我</h1>
+	<aside class="about-card">
+		<Image class="avatar pixel-avatar" src={avatar} alt="Oddyti" width={256} height={256} />
+		<span class="name">{AUTHOR_NAME}</span>
+		<span class="subtitle">{SITE_SUBTITLE}</span>
+		<nav class="social" aria-label="社交链接">
+			{
+				SOCIAL_LINKS.map((link) => (
+					<a
+						href={link.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label={link.name}
+						title={link.name}
+					>
+						<span class="social-icon" set:html={icon(link.icon)} />
+					</a>
+				))
+			}
+		</nav>
+	</aside>
+
+	<article class="about prose">		<h1>关于我</h1>
 
 		<p><em>====苦逼读研中====</em></p>
 
@@ -28,3 +57,56 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		</p>
 	</article>
 </BaseLayout>
+
+<style>
+	.about-card {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
+		text-align: left;
+	}
+
+	.avatar {
+		width: 64px;
+		height: 64px;
+	}
+
+	.name {
+		font-family: var(--font-pixel);
+		font-size: var(--fs-lg);
+		letter-spacing: 0.18em;
+		text-shadow: var(--pixel-text-shadow);
+	}
+
+	.subtitle {
+		font-size: var(--fs-md);
+		color: var(--text-soft);
+		line-height: 1.6;
+	}
+
+	.social {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-top: 0.5rem;
+	}
+
+	.social a {
+		display: flex;
+		align-items: center;
+		color: var(--text-soft);
+		text-decoration: none;
+	}
+
+	.social a:hover {
+		color: var(--accent);
+	}
+
+	.social-icon :global(svg) {
+		width: 24px;
+		height: 24px;
+		display: block;
+	}
+</style>

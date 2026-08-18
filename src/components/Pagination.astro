@@ -19,11 +19,17 @@ const pageUrl = (n: number) => (n === 1 ? basePath : `${basePath}${n}/`);
 
 <nav class="pagination" aria-label="分页">
 	{page.url.prev ? (
-		<a class="pagination-link pagination-prev" href={page.url.prev}>
-			‹ 上一页
+		<a
+			class="pagination-link pagination-prev"
+			href={page.url.prev}
+			aria-label="上一页"
+		>
+			‹
 		</a>
 	) : (
-		<span class="pagination-link pagination-prev disabled">‹ 上一页</span>
+		<span class="pagination-link pagination-prev disabled" aria-label="上一页">
+			‹
+		</span>
 	)}
 
 	<span class="pagination-pages">
@@ -39,11 +45,17 @@ const pageUrl = (n: number) => (n === 1 ? basePath : `${basePath}${n}/`);
 	</span>
 
 	{page.url.next ? (
-		<a class="pagination-link pagination-next" href={page.url.next}>
-			下一页 ›
+		<a
+			class="pagination-link pagination-next"
+			href={page.url.next}
+			aria-label="下一页"
+		>
+			›
 		</a>
 	) : (
-		<span class="pagination-link pagination-next disabled">下一页 ›</span>
+		<span class="pagination-link pagination-next disabled" aria-label="下一页">
+			›
+		</span>
 	)}
 </nav>
 
