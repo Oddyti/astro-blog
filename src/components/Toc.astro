@@ -114,7 +114,6 @@ const items = headings.filter((h) => h.depth >= 2);
 
 	.toc-item a:hover {
 		color: var(--accent);
-		
 	}
 
 	.toc-item a:hover::before {
@@ -135,6 +134,14 @@ const items = headings.filter((h) => h.depth >= 2);
 
 	.toc-item.depth-4 a {
 		padding-left: 2.7rem;
+	}
+
+	.toc-item.depth-5 a {
+		padding-left: 3.5rem;
+	}
+
+	.toc-item.depth-6 a {
+		padding-left: 4.3rem;
 	}
 
 	/* 移动端：目录呈现在侧滑面板内，静态定位 */

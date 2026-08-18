@@ -7,7 +7,6 @@ slug: 'BMW'
 tags: ['游戏','黑神话：悟空']
 categories: ['出神']
 image: 'concept.jpg'
-license: false
 
 ---
 

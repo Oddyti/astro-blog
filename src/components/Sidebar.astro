@@ -1,8 +1,8 @@
 ---
 import { Image } from 'astro:assets';
-import { readFileSync } from 'node:fs';
 import avatar from '../assets/avatar.png';
-import { AUTHOR_NAME, CATEGORIES, SITE_SUBTITLE, SOCIAL_LINKS } from '../consts';
+import { AUTHOR_NAME, CATEGORIES, SITE_SUBTITLE } from '../consts';
+import SocialLinks from './SocialLinks.astro';
 import { categoryPath } from '../lib/paths';
 import {
 	getAllPosts,
@@ -15,36 +15,16 @@ const posts = await getAllPosts();
 const archive = getArchive(posts);
 const categoryCounts = getCategoryCounts(posts);
 const tagCounts = getTagCounts(posts);
-
-const icon = (name: string) =>
-	readFileSync(`./public/${name}.svg`, 'utf-8')
-		.replace(/<\?xml[^>]*\?>/, '')
-		.replace('<svg', '<svg viewBox="0 0 96 96"')
-		.replace(/fill="#000000"/g, 'fill="currentColor"');
 ---
 
 <aside class="sidebar">
 	<a class="identity" href="/about/">
-		<Image class="avatar pixel-avatar" src={avatar} alt="Oddyti" width={256} height={256} />
+		<Image class="avatar pixel-avatar" src={avatar} alt="Oddyti" width={256} height={256} loading="eager" />
 		<span class="name">{AUTHOR_NAME}</span>
 		<span class="subtitle">{SITE_SUBTITLE}</span>
 	</a>
 
-	<nav class="social">
-		{
-			SOCIAL_LINKS.map((link) => (
-				<a
-					href={link.url}
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-label={link.name}
-					title={link.name}
-				>
-					<span class="social-icon" set:html={icon(link.icon)} />
-				</a>
-			))
-		}
-	</nav>
+	<SocialLinks size={30} bordered />
 
 	<section class="widget">
 		<h2 class="widget-title pixel-title">分类</h2>
@@ -200,32 +180,6 @@ const words = tags.map(([text, count]) => ({ text, count }));
 		line-height: 1.6;
 	}
 
-	.social {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 1rem;
-		padding: 0.5rem 0 1.1rem;
-		border-bottom: 2px solid var(--text);
-	}
-
-	.social a {
-		display: flex;
-		align-items: center;
-		color: var(--text-soft);
-		text-decoration: none;
-	}
-
-	.social a:hover {
-		color: var(--accent);
-	}
-
-	.social-icon :global(svg) {
-		width: 30px;
-		height: 30px;
-		display: block;
-	}
-
 	.widget {
 		padding: 1.1rem 0 0.2rem;
 		border-bottom: 2px dashed var(--border);
@@ -281,9 +235,6 @@ const words = tags.map(([text, count]) => ({ text, count }));
 		font-family: var(--font-pixel);
 		font-size: var(--fs-xs);
 		text-decoration: none;
-	}
-
-	.widget-more:hover {
 	}
 
 	.dot {

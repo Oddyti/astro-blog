@@ -7,7 +7,6 @@ slug: 'a-scene-at-the-sea'
 tags: ['电影', '那年夏天宁静的海', '影评', '北野武']
 categories: ['出神']
 image: 'poster-resize.jpg'
-license: false
 
 ---
 

@@ -1,0 +1,59 @@
+---
+import { SOCIAL_LINKS } from '../consts';
+import { icon } from '../lib/icons';
+
+interface Props {
+	size?: number;
+	bordered?: boolean;
+}
+
+const { size = 30, bordered = false } = Astro.props;
+const sizeVar = size;
+---
+
+<nav class:list={['social', { 'social--bordered': bordered }]} aria-label="社交链接">
+	{
+		SOCIAL_LINKS.map((link) => (
+			<a
+				href={link.url}
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label={link.name}
+				title={link.name}
+			>
+				<span class="social-icon" set:html={icon(link.icon)} style={`--social-size: ${sizeVar}px`} />
+			</a>
+		))
+	}
+</nav>
+
+<style>
+	.social {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+	}
+
+	.social--bordered {
+		padding: 0.5rem 0 1.1rem;
+		border-bottom: 2px solid var(--text);
+	}
+
+	.social a {
+		display: flex;
+		align-items: center;
+		color: var(--text-soft);
+		text-decoration: none;
+	}
+
+	.social a:hover {
+		color: var(--accent);
+	}
+
+	.social-icon :global(svg) {
+		width: var(--social-size);
+		height: var(--social-size);
+		display: block;
+	}
+</style>

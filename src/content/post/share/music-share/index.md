@@ -7,7 +7,6 @@ slug: 'music-share'
 tags: ['推歌']
 categories: ['递手']
 image: ''
-license: false
 weight: ''
 ---
 

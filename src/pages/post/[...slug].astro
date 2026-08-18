@@ -3,8 +3,8 @@ import { Image } from 'astro:assets';
 import { type CollectionEntry, render } from 'astro:content';
 import 'katex/dist/katex.min.css';
 import FormattedDate from '../../components/FormattedDate.astro';
+import SlidePanel from '../../components/SlidePanel.astro';
 import Toc from '../../components/Toc.astro';
-import { LICENSE_TEXT } from '../../consts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { categoryPath, postSlug, tagPath } from '../../lib/paths';
 import { filterCategories, filterTags, getAllPosts } from '../../lib/posts';
@@ -25,7 +25,6 @@ const tocHeadings = headings.filter((h) => h.depth >= 2);
 
 const categories = filterCategories(post.data.categories);
 const tags = filterTags(post.data.tags);
-const showLicense = post.data.license !== false;
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description} rail>
@@ -33,7 +32,7 @@ const showLicense = post.data.license !== false;
 		<header class="post-header">
 			{post.data.image && (
 				<div class="cover">
-					<Image src={post.data.image} alt="" width={1400} />
+					<Image src={post.data.image} alt="" width={1400} loading="eager" />
 				</div>
 			)}
 			<h1 class="post-title">{post.data.title}</h1>
@@ -57,8 +56,6 @@ const showLicense = post.data.license !== false;
 		<div class="prose">
 			<Content />
 		</div>
-
-		{showLicense && <p class="license">{LICENSE_TEXT}</p>}
 	</article>
 
 	<div slot="rail">
@@ -67,8 +64,8 @@ const showLicense = post.data.license !== false;
 </BaseLayout>
 
 {tocHeadings.length > 0 && (
-	<>
-		<button class="toc-fab pixel-press" type="button" data-toc-fab aria-label="打开目录" aria-expanded="false">
+	<SlidePanel label="目录" class="toc-fab">
+		<span slot="trigger">
 			<svg viewBox="0 0 24 24" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true">
 				<rect x="2" y="3" width="4" height="4" />
 				<rect x="9" y="3" width="13" height="2" />
@@ -80,41 +77,13 @@ const showLicense = post.data.license !== false;
 				<rect x="9" y="17" width="13" height="2" />
 				<rect x="9" y="19" width="13" height="2" />
 			</svg>
-		</button>
-		<div class="toc-overlay" data-toc-overlay hidden></div>
-		<aside class="toc-panel" data-toc-panel aria-label="移动端目录">
-			<div class="toc-panel-head">
-				<span class="toc-panel-title">目录</span>
-			</div>
-			<Toc headings={tocHeadings} mobile />
-		</aside>
-	</>
+		</span>
+		<div class="toc-panel-head">
+			<span class="toc-panel-title">目录</span>
+		</div>
+		<Toc headings={tocHeadings} mobile />
+	</SlidePanel>
 )}
-
-<script>
-	const fab = document.querySelector<HTMLButtonElement>('[data-toc-fab]');
-	const panel = document.querySelector<HTMLElement>('[data-toc-panel]');
-	const overlay = document.querySelector<HTMLElement>('[data-toc-overlay]');
-	if (fab && panel && overlay) {
-		const open = () => {
-			panel.classList.add('open');
-			overlay.hidden = false;
-			fab.setAttribute('aria-expanded', 'true');
-			document.body.style.overflow = 'hidden';
-		};
-		const close = () => {
-			panel.classList.remove('open');
-			overlay.hidden = true;
-			fab.setAttribute('aria-expanded', 'false');
-			document.body.style.overflow = '';
-		};
-		fab.addEventListener('click', () =>
-			panel.classList.contains('open') ? close() : open(),
-		);
-		overlay.addEventListener('click', close);
-		panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
-	}
-</script>
 
 <style>
 	.post-header {
@@ -155,22 +124,8 @@ const showLicense = post.data.license !== false;
 		margin-right: 0.25rem;
 	}
 
-	.prose {
-		overflow-wrap: break-word;
-	}
-
-	.license {
-		margin-top: 3rem;
-		padding-top: 1rem;
-		border-top: 2px dashed var(--border);
-		font-family: var(--font-pixel);
-		font-size: var(--fs-xs);
-		color: var(--text-soft);
-		letter-spacing: 0.06em;
-	}
-
-	/* 移动端浮动目录按钮 + 侧滑面板 */
-	.toc-fab {
+	/* 移动端浮动目录按钮（SlidePanel 触发按钮）+ 侧滑面板内容 */
+	:global(.toc-fab) {
 		position: fixed;
 		right: 1rem;
 		bottom: 1.5rem;
@@ -188,65 +143,42 @@ const showLicense = post.data.license !== false;
 		display: none;
 	}
 
-	.toc-fab:hover {
+	:global(.toc-fab:hover) {
 		opacity: 1;
 	}
 
-	.toc-fab svg {
+	:global(.toc-fab svg) {
 		width: 26px;
 		height: 26px;
 		display: block;
 	}
 
-	.toc-overlay {
-		position: fixed;
-		inset: 0;
-		z-index: 110;
-		background: rgba(16, 19, 26, 0.5);
-	}
-
-	.toc-panel {
-		position: fixed;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 120;
-		width: 240px;
-		max-width: 80vw;
-		background: var(--bg);
-		border-left: 2px solid var(--text);
-		flex-direction: column;
-		transform: translateX(100%);
-		transition: transform 0.2s steps(6);
-		display: none;
-	}
-
-	.toc-panel.open {
-		transform: translateX(0);
-	}
-
-	.toc-panel-head {
+	:global(.toc-panel-head) {
 		padding: 0.9rem 1rem;
 		border-bottom: 2px solid var(--text);
 		background: var(--bg-soft);
 		text-align: center;
 	}
 
-	.toc-panel-title {
+	:global(.toc-panel-title) {
 		font-family: var(--font-pixel);
 		font-size: var(--fs-md);
 		letter-spacing: 0.1em;
 		color: var(--text);
 	}
 
-	.toc-panel :global(.toc--mobile) {
+	:global(.toc-panel .toc--mobile) {
 		padding: 1rem;
 		overflow-y: auto;
 	}
 
+	/* 目录面板复用 SlidePanel 的 .slide-panel */
+	:global(.slide-panel) {
+		width: 240px;
+	}
+
 	@media (max-width: 768px) { /* 断点 = --bp-mobile */
-		.toc-fab,
-		.toc-panel {
+		:global(.toc-fab) {
 			display: flex;
 		}
 	}

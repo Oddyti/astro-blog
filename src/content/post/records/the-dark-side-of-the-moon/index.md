@@ -7,7 +7,6 @@ slug: 'the-dark-side-of-the-moon'
 tags: ['音乐', '专辑', 'Pink Floyd']
 categories: ['出神']
 image: ''
-license: false
 
 ---
 

@@ -7,7 +7,6 @@ slug: 'longhair'
 tags: ['自我察觉']
 categories: ['出神']
 image: ''
-license: false
 ---
 
 

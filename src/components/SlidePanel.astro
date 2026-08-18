@@ -1,0 +1,80 @@
+---
+interface Props {
+	label: string;
+	class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<button class:list={[className, 'slide-trigger']} type="button" data-slide-trigger aria-label={label} aria-expanded="false">
+	<slot name="trigger" />
+</button>
+
+<div class="slide-overlay" data-slide-overlay hidden></div>
+<aside class="slide-panel" data-slide-panel aria-label={label} tabindex="-1">
+	<slot />
+</aside>
+
+<script>
+	// 支持同一页面多个实例：为每个触发器绑定其后的遮罩与面板
+	document.querySelectorAll<HTMLButtonElement>('[data-slide-trigger]').forEach((trigger) => {
+		const overlay = trigger.nextElementSibling as HTMLElement | null;
+		const panel = overlay?.nextElementSibling as HTMLElement | null;
+		if (!overlay || !panel) return;
+
+		const open = () => {
+			panel.classList.add('open');
+			overlay.hidden = false;
+			trigger.setAttribute('aria-expanded', 'true');
+			document.body.style.overflow = 'hidden';
+			panel.focus();
+		};
+		const close = () => {
+			panel.classList.remove('open');
+			overlay.hidden = true;
+			trigger.setAttribute('aria-expanded', 'false');
+			document.body.style.overflow = '';
+			trigger.focus();
+		};
+
+		trigger.addEventListener('click', () =>
+			panel.classList.contains('open') ? close() : open(),
+		);
+		overlay.addEventListener('click', close);
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && panel.classList.contains('open')) close();
+		});
+		panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+	});
+</script>
+
+<style>
+	.slide-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 110;
+		background: rgba(16, 19, 26, 0.5);
+	}
+
+	.slide-panel {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 120;
+		width: 240px;
+		max-width: 80vw;
+		background: var(--bg);
+		border-left: 2px solid var(--text);
+		display: flex;
+		flex-direction: column;
+		transform: translateX(100%);
+		transition: transform 0.2s steps(6);
+		outline: none;
+	}
+
+	.slide-panel.open {
+		transform: translateX(0);
+	}
+</style>

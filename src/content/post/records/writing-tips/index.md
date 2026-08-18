@@ -7,7 +7,6 @@ slug: 'writing-tips'
 tags: ['写作']
 categories: ['行囊']
 image: ''
-license: false
 ---
 
 

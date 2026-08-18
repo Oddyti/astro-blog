@@ -7,7 +7,6 @@ slug: 'sort-methods'
 tags: ['排序算法']
 categories: ['行囊']
 image: ''
-license: false
 ---
 
 

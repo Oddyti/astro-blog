@@ -7,7 +7,6 @@ slug: 'buddha+'
 tags: ['电影','大佛普拉斯','影评']
 categories: ['出神']
 image: ''
-license: false
 
 ---
 

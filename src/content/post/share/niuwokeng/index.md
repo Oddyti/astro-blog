@@ -7,7 +7,6 @@ slug: 'niuwokeng'
 tags: ['推歌','牛窝坑之子']
 categories: ['递手']
 image: 'new.png'
-license: false
 
 ---
 

@@ -7,7 +7,6 @@ slug: 'far-away'
 tags: ['随笔']
 categories: ['出神']
 image: 'cover.jpg'
-license: false
 ---
 
 

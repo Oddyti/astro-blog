@@ -7,7 +7,6 @@ slug: 'high-school-memories'
 tags: ['回忆','生死','碎碎念', '随笔']
 categories: ['出神']
 image: ''
-license: false
 ---
 
 

@@ -7,7 +7,6 @@ slug: 'writing-ideas'
 tags: ['写作']
 categories: ['出神']
 image: ''
-license: false
 ---
 
 

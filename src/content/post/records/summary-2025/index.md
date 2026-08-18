@@ -7,7 +7,6 @@ slug: 'summary-2025'
 tags: ['年度总结']
 categories: ['出神']
 image: ''
-license: false
 
 ---
 

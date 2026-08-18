@@ -7,7 +7,6 @@ slug: 'music-2023'
 tags: ['推歌']
 categories: ['递手']
 image: 'bg.png'
-license: false
 ---
 
 

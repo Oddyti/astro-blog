@@ -7,7 +7,6 @@ slug: 'zhihu'
 tags: ['知乎','常看常新']
 categories: ['递手']
 image: ''
-license: false
 ---
 
 

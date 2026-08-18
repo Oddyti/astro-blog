@@ -7,7 +7,6 @@ slug: 'kid-a'
 tags: ['音乐', '专辑', 'Radiohead']
 categories: ['出神']
 image: ''
-license: false
 
 ---
 

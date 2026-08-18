@@ -7,7 +7,6 @@ slug: 'listen-music'
 tags: ['乐理']
 categories: ['出神']
 image: ''
-license: false
 ---
 
 

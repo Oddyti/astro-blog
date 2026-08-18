@@ -7,7 +7,6 @@ slug: 'black-tangerine'
 tags: ['音乐', '回忆', '陶喆']
 categories: ['出神']
 image: ''
-license: false
 ---
 
 

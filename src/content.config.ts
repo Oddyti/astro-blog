@@ -21,7 +21,6 @@ const post = defineCollection({
 				(value) => (value === '' || value == null ? undefined : value),
 				image().optional(),
 			),
-			license: z.boolean().default(true),
 		}),
 });
 

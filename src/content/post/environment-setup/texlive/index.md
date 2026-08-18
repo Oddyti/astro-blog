@@ -7,7 +7,6 @@ slug: 'texlive'
 tags: ['LaTex','环境配置']
 categories: ['行囊']
 image: ''
-license: false
 ---
 
 

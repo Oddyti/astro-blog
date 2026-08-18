@@ -1,6 +1,7 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+import SlidePanel from './SlidePanel.astro';
 ---
 
 <header class="site-header">
@@ -20,61 +21,22 @@ import HeaderLink from './HeaderLink.astro';
 
 		<div class="nav-mobile">
 			<pagefind-modal-trigger compact aria-label="搜索" title="搜索 (Cmd+K)"></pagefind-modal-trigger>
-			<button
-				class="menu-btn pixel-press"
-				type="button"
-				aria-label="打开菜单"
-				aria-expanded="false"
-				data-menu-btn
-			>
-				<span class="menu-icon"></span>
-			</button>
+			<SlidePanel label="菜单">
+				<span slot="trigger" class="menu-icon" aria-hidden="true"></span>
+				<div class="drawer-title">{SITE_TITLE}</div>
+				<ul class="drawer-list">
+					<li><a class="drawer-link" href="/">主页</a></li>
+					<li><a class="drawer-link" href="/posts/">文章</a></li>
+					<li><a class="drawer-link" href="/categories/">分类</a></li>
+					<li><a class="drawer-link" href="/archives/">归档</a></li>
+					<li><a class="drawer-link" href="/tags/">标签</a></li>
+					<li><a class="drawer-link" href="/about/">关于</a></li>
+					<li><a class="drawer-link" href="/links/">友链</a></li>
+				</ul>
+			</SlidePanel>
 		</div>
 	</div>
-
-	<!-- 侧拉抽屉菜单 -->
-	<div class="drawer-overlay" data-overlay hidden></div>
-	<nav class="drawer" data-drawer aria-label="移动端菜单">
-		<div class="drawer-title">{SITE_TITLE}</div>
-		<ul class="drawer-list">
-			<li><a class="drawer-link" href="/">主页</a></li>
-			<li><a class="drawer-link" href="/posts/">文章</a></li>
-			<li><a class="drawer-link" href="/categories/">分类</a></li>
-			<li><a class="drawer-link" href="/archives/">归档</a></li>
-			<li><a class="drawer-link" href="/tags/">标签</a></li>
-			<li><a class="drawer-link" href="/about/">关于</a></li>
-			<li><a class="drawer-link" href="/links/">友链</a></li>
-		</ul>
-	</nav>
 </header>
-
-<script>
-	const btn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
-	const drawer = document.querySelector<HTMLElement>('[data-drawer]');
-	const overlay = document.querySelector<HTMLElement>('[data-overlay]');
-	if (!btn || !drawer || !overlay) throw new Error('menu elements missing');
-
-	const open = () => {
-		drawer.classList.add('open');
-		overlay.hidden = false;
-		btn.setAttribute('aria-expanded', 'true');
-		btn.setAttribute('aria-label', '关闭菜单');
-		document.body.style.overflow = 'hidden';
-	};
-	const close = () => {
-		drawer.classList.remove('open');
-		overlay.hidden = true;
-		btn.setAttribute('aria-expanded', 'false');
-		btn.setAttribute('aria-label', '打开菜单');
-		document.body.style.overflow = '';
-	};
-
-	btn.addEventListener('click', () =>
-		drawer.classList.contains('open') ? close() : open(),
-	);
-	overlay.addEventListener('click', close);
-	drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
-</script>
 
 <style>
 	.site-header {
@@ -125,7 +87,8 @@ import HeaderLink from './HeaderLink.astro';
 		gap: 0.25rem;
 	}
 
-	.menu-btn {
+	/* 汉堡触发器（SlidePanel 按钮，需 :global 匹配 SlidePanel 渲染的元素） */
+	:global(.nav-mobile .slide-trigger) {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -137,9 +100,9 @@ import HeaderLink from './HeaderLink.astro';
 		cursor: pointer;
 	}
 
-	.menu-icon,
-	.menu-icon::before,
-	.menu-icon::after {
+	:global(.menu-icon),
+	:global(.menu-icon::before),
+	:global(.menu-icon::after) {
 		content: '';
 		display: block;
 		width: 20px;
@@ -148,52 +111,23 @@ import HeaderLink from './HeaderLink.astro';
 		margin: 0 auto;
 	}
 
-	.menu-icon {
+	:global(.menu-icon) {
 		position: relative;
 	}
 
-	.menu-icon::before {
+	:global(.menu-icon::before) {
 		position: absolute;
 		top: -7px;
 		left: 0;
 	}
 
-	.menu-icon::after {
+	:global(.menu-icon::after) {
 		position: absolute;
 		top: 7px;
 		left: 0;
 	}
 
-	/* 抽屉遮罩 */
-	.drawer-overlay {
-		position: fixed;
-		inset: 0;
-		z-index: 110;
-		background: rgba(16, 19, 26, 0.5);
-	}
-
-	/* 侧拉抽屉 */
-	.drawer {
-		position: fixed;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 120;
-		width: 150px;
-		max-width: 75vw;
-		background: var(--bg);
-		border-left: 2px solid var(--text);
-		display: flex;
-		flex-direction: column;
-		transform: translateX(100%);
-		transition: transform 0.2s steps(6);
-	}
-
-	.drawer.open {
-		transform: translateX(0);
-	}
-
-	.drawer-title {
+	:global(.drawer-title) {
 		margin: 0.9rem;
 		padding: 0.45rem 0.75rem;
 		font-family: var(--font-pixel);
@@ -206,23 +140,23 @@ import HeaderLink from './HeaderLink.astro';
 		border-bottom: 2px solid var(--text);
 	}
 
-	.drawer-list {
+	:global(.drawer-list) {
 		list-style: none;
 		margin: 0;
 		padding: 0.5rem 0;
 		overflow-y: auto;
 	}
 
-	.drawer-list li {
+	:global(.drawer-list li) {
 		border-bottom: 2px dashed var(--border);
 		text-align: center;
 	}
 
-	.drawer-list li:last-child {
+	:global(.drawer-list li:last-child) {
 		border-bottom: none;
 	}
 
-	.drawer-link {
+	:global(.drawer-link) {
 		display: block;
 		padding: 0.8rem 1rem;
 		font-family: var(--font-pixel);
@@ -232,7 +166,7 @@ import HeaderLink from './HeaderLink.astro';
 		text-decoration: none;
 	}
 
-	.drawer-link:hover {
+	:global(.drawer-link:hover) {
 		color: var(--accent);
 		background: var(--accent-soft);
 	}
@@ -246,6 +180,23 @@ import HeaderLink from './HeaderLink.astro';
 
 		.nav-mobile {
 			display: flex;
+		}
+
+		.header-inner {
+			padding: 0.5rem 1rem;
+		}
+
+		.site-title {
+			padding: 0.3rem 0.5rem;
+		}
+
+		:global(.nav-mobile .slide-trigger) {
+			width: 36px;
+			height: 36px;
+		}
+
+		.nav-mobile pagefind-modal-trigger .pf-trigger-btn {
+			padding: 0.3rem;
 		}
 	}
 </style>

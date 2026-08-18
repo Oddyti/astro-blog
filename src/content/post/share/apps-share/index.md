@@ -7,7 +7,6 @@ slug: 'apps-share'
 tags: ['装机必备']
 categories: ['递手']
 image: ''
-license: false
 ---
 
 

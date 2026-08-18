@@ -7,7 +7,6 @@ slug: 'simulated-annealing'
 tags: ['最优化算法','退火算法']
 categories: ['行囊']
 image: ''
-license: false
 
 ---
 

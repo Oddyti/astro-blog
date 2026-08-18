@@ -7,7 +7,6 @@ slug: 'ask-for-direction'
 tags: ['回忆', '随笔']
 categories: ['出神']
 image: ''
-license: false
 ---
 
 

@@ -7,7 +7,6 @@ slug: 'genetic-algorithm'
 tags: ['最优化算法','遗传算法']
 categories: ['行囊']
 image: ''
-license: false
 
 ---
 

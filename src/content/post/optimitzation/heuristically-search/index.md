@@ -7,7 +7,6 @@ slug: 'heuristically-search'
 tags: ['最优化算法','启发式搜索']
 categories: ['行囊']
 image: ''
-license: false
 
 ---
 

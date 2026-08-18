@@ -41,8 +41,6 @@
 	--rail-width: 220px;
 	--layout-cap: 1360px;
 	--header-h: 70px;
-	--radius: 0;
-	--pixel: 4px;
 	--pixel-text-shadow: 2px 2px 0 rgba(38, 70, 83, 0.2);
 	--card-pad: 0.9rem 1.1rem;
 	--accent-bar: 6px;
@@ -54,9 +52,8 @@
 	--fs-lg: 18px;
 	--fs-xl: 24px;
 	--fs-2xl: 30px;
-	/* 响应式断点：<768 手机端，<1024 隐藏侧边栏/目录转单栏 */
-	--bp-mobile: 768px;
-	--bp-tablet: 1024px;
+	/* 响应式断点：媒体查询里已硬编码（CSS 变量不能进 media query）
+	   手机 <768px / 平板(隐藏侧边栏/目录) <1024px */
 }
 
 * {
@@ -127,10 +124,6 @@ a {
 	text-decoration: none;
 }
 
-a:hover {
-	text-decoration: none;
-}
-
 /* 统一像素交互模式：
    .pixel-press — 卡片/按钮按压（无位移，hover 仅过渡颜色/边框）
    .pixel-fill  — 反色填充按钮（hover 实心反色 + 位移）
@@ -153,11 +146,7 @@ a:hover {
 		color 0.06s steps(2);
 }
 
-.pixel-fill:hover {
-	background: var(--accent);
-	color: var(--bg);
-}
-
+.pixel-fill:hover,
 .pixel-fill:active {
 	background: var(--accent);
 	color: var(--bg);
@@ -291,12 +280,14 @@ main.layout--rail {
 main.layout .main-column {
 	grid-column: 2;
 	min-width: 0;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 }
 
 main.layout .main-content {
 	flex: 1;
+	min-width: 0;
 	padding-bottom: 3rem;
 }
 

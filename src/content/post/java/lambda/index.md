@@ -7,7 +7,6 @@ slug: 'lambda'
 tags: ['JAVA']
 categories: ['行囊']
 image: ''
-license: false
 ---
 
 

@@ -7,7 +7,6 @@ slug: 'movie-records'
 tags: ['电影']
 categories: ['闲逛']
 image: ''
-license: false
 
 ---
 

@@ -18,16 +18,17 @@
 	font-weight: 400;
 	font-family: var(--font-pixel);
 	color: var(--text);
+	scroll-margin-top: calc(var(--header-h) + 1.5rem);
 }
 
 .prose h1 {
-	font-size: var(--fs-2xl);
+	font-size: var(--fs-xl);
+	padding-bottom: 0.35em;
+	border-bottom: 3px solid var(--accent);
 }
 
 .prose h2 {
 	font-size: var(--fs-xl);
-	padding-bottom: 0.35em;
-	border-bottom: 3px solid var(--accent);
 }
 
 .prose h3 {
@@ -36,6 +37,54 @@
 
 .prose h4 {
 	font-size: var(--fs-base);
+}
+
+.prose h5,
+.prose h6 {
+	font-size: var(--fs-base);
+}
+
+/* 各级标题前的 H1/H2... 像素标签标记 */
+.prose h1::before {
+	content: 'H1';
+}
+
+.prose h2::before {
+	content: 'H2';
+}
+
+.prose h3::before {
+	content: 'H3';
+}
+
+.prose h4::before {
+	content: 'H4';
+}
+
+.prose h5::before {
+	content: 'H5';
+}
+
+.prose h6::before {
+	content: 'H6';
+}
+
+.prose h1::before,
+.prose h2::before,
+.prose h3::before,
+.prose h4::before,
+.prose h5::before,
+.prose h6::before {
+	display: inline-flex;
+	align-items: center;
+	margin-right: 0.6em;
+	padding: 0.08em 0.5em;
+	font-family: var(--font-pixel);
+	font-size: 1em;
+	line-height: 1;
+	color: var(--bg);
+	background: var(--accent);
+	border: 2px solid var(--accent);
 }
 
 .prose p {

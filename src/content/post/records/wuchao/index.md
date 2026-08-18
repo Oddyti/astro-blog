@@ -7,7 +7,6 @@ slug: 'wuchao'
 tags: ['徒步','午潮山']
 categories: ['闲逛']
 image: '呆坐3.jpg'
-license: false
 
 ---
 

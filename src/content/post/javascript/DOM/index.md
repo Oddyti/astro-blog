@@ -7,7 +7,6 @@ slug: 'DOM-study'
 tags: ['DOM']
 categories: ['行囊']
 image: ''
-license: false
 ---
 
 

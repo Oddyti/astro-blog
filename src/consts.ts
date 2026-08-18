@@ -6,7 +6,6 @@ export const SITE_SUBTITLE = '是谁来自山川湖海，却囿于昼夜厨房�
 export const SITE_OWNER = 'Oddyti';
 export const AUTHOR_NAME = '不酸奶';
 export const SITE_SINCE = 2020;
-export const LICENSE_TEXT = 'Licensed under CC BY-NC-SA 4.0';
 
 // Category metadata migrated from the original Hugo blog.
 export const CATEGORIES: Record<

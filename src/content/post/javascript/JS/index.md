@@ -7,7 +7,6 @@ slug: 'js-study'
 tags: ['JavaScript']
 categories: ['行囊']
 image: 'JS.png'
-license: false
 ---
 
 

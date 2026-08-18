@@ -7,7 +7,6 @@ slug: 'hobbies'
 tags: ['成长','乐理']
 categories: ['出神']
 image: ''
-license: false
 
 ---
 

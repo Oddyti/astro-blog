@@ -7,7 +7,6 @@ slug: 'child-hood-games'
 tags: ['游戏','回忆']
 categories: ['闲逛']
 image: 'cover.jpg'
-license: false
 ---
 
 

@@ -7,7 +7,6 @@ slug: 'hugo-problems'
 tags: ['Hugo']
 categories: ['行囊']
 image: 'cover.jpg'
-license: false
 ---
 
 
