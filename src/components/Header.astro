@@ -1,12 +1,20 @@
 ---
+import { readFileSync } from 'node:fs';
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import SlidePanel from './SlidePanel.astro';
+
+const logo = readFileSync('./public/logo.svg', 'utf-8').replace(/<\?xml[^>]*\?>/, '');
+const logoSize = /<svg[^>]*width="(\d+)"[^>]*height="(\d+)"/.exec(logo);
+const [logoW, logoH] = logoSize ? [+logoSize[1], +logoSize[2]] : [256, 256];
+const logoHtml = logo.replace('<svg', `<svg viewBox="0 0 ${logoW} ${logoH}"`);
 ---
 
 <header class="site-header">
 	<div class="header-inner">
-		<a class="site-title pixel-press" href="/">{SITE_TITLE}</a>
+		<a class="site-logo pixel-press" href="/" aria-label="余地" title="余地">
+			<span set:html={logoHtml} aria-hidden="true"></span>
+		</a>
 
 		<nav class="nav-desktop">
 			<HeaderLink href="/">主页</HeaderLink>
@@ -16,11 +24,11 @@ import SlidePanel from './SlidePanel.astro';
 			<HeaderLink href="/tags/">标签</HeaderLink>
 			<HeaderLink href="/about/">关于</HeaderLink>
 			<HeaderLink href="/links/">友链</HeaderLink>
-			<pagefind-modal-trigger compact aria-label="搜索" title="搜索 (Cmd+K)"></pagefind-modal-trigger>
+			<pagefind-modal-trigger compact hide-shortcut aria-label="搜索" title="搜索"></pagefind-modal-trigger>
 		</nav>
 
 		<div class="nav-mobile">
-			<pagefind-modal-trigger compact aria-label="搜索" title="搜索 (Cmd+K)"></pagefind-modal-trigger>
+			<pagefind-modal-trigger compact hide-shortcut aria-label="搜索" title="搜索"></pagefind-modal-trigger>
 			<SlidePanel label="菜单">
 				<span slot="trigger" class="menu-icon" aria-hidden="true"></span>
 				<div class="drawer-title">{SITE_TITLE}</div>
@@ -57,21 +65,16 @@ import SlidePanel from './SlidePanel.astro';
 		gap: 1rem;
 	}
 
-	.site-title {
-		font-family: var(--font-pixel);
-		font-size: var(--fs-base);
-		letter-spacing: 0.1em;
-		color: var(--text);
+	.site-logo {
+		display: inline-flex;
+		align-items: center;
 		text-decoration: none;
-		white-space: nowrap;
-		padding: 0.45rem 0.75rem;
-		border: 2px solid var(--text);
-		background: var(--bg);
 	}
 
-	.site-title:hover {
-		color: var(--accent);
-		border-color: var(--accent);
+	.site-logo :global(svg) {
+		display: block;
+		height: 40px;
+		width: auto;
 	}
 
 	.nav-desktop {
@@ -186,8 +189,9 @@ import SlidePanel from './SlidePanel.astro';
 			padding: 0.5rem 1rem;
 		}
 
-		.site-title {
-			padding: 0.3rem 0.5rem;
+		.site-logo :global(svg) {
+			height: 34px;
+			width: auto;
 		}
 
 		:global(.nav-mobile .slide-trigger) {
