@@ -24,11 +24,15 @@ const logoHtml = logo.replace('<svg', `<svg viewBox="0 0 ${logoW} ${logoH}"`);
 			<HeaderLink href="/tags/">标签</HeaderLink>
 			<HeaderLink href="/about/">关于</HeaderLink>
 			<HeaderLink href="/links/">友链</HeaderLink>
-			<pagefind-modal-trigger compact hide-shortcut aria-label="搜索" title="搜索"></pagefind-modal-trigger>
+			<span class="nav-search" aria-hidden="true">
+				<pagefind-modal-trigger compact hide-shortcut aria-label="搜索" title="搜索"></pagefind-modal-trigger>
+			</span>
 		</nav>
 
 		<div class="nav-mobile">
-			<pagefind-modal-trigger compact hide-shortcut aria-label="搜索" title="搜索"></pagefind-modal-trigger>
+			<span class="nav-search" aria-hidden="true">
+				<pagefind-modal-trigger compact hide-shortcut aria-label="搜索" title="搜索"></pagefind-modal-trigger>
+			</span>
 			<SlidePanel label="菜单">
 				<span slot="trigger" class="menu-icon" aria-hidden="true"></span>
 				<div class="drawer-title">{SITE_TITLE}</div>
@@ -83,6 +87,29 @@ const logoHtml = logo.replace('<svg', `<svg viewBox="0 0 ${logoW} ${logoH}"`);
 		gap: 0.25rem;
 		height: 40px;
 		overflow-x: auto;
+	}
+
+	/* 搜索触发器占位容器：固定尺寸，避免异步 Web Component 加载引起布局跳动/溢出 */
+	.nav-search {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		flex-shrink: 0;
+	}
+
+	.nav-search pagefind-modal-trigger,
+	.nav-search :global(pagefind-modal-trigger) {
+		display: inline-flex;
+		width: 100%;
+		height: 100%;
+	}
+
+	.nav-search .pf-trigger-btn {
+		width: 100%;
+		height: 100%;
+		padding: 0;
 	}
 
 	.nav-mobile {
@@ -200,8 +227,13 @@ const logoHtml = logo.replace('<svg', `<svg viewBox="0 0 ${logoW} ${logoH}"`);
 			height: 36px;
 		}
 
-		.nav-mobile pagefind-modal-trigger .pf-trigger-btn {
-			padding: 0.3rem;
+		.nav-mobile .nav-search {
+			width: 36px;
+			height: 36px;
+		}
+
+		.nav-mobile .nav-search :global(.pf-trigger-btn) {
+			height: 36px !important;
 		}
 	}
 </style>
