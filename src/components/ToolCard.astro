@@ -1,0 +1,53 @@
+---
+interface Props {
+	name: string;
+	desc: string;
+	url: string;
+}
+
+const { name, desc, url } = Astro.props;
+---
+
+<span class="tool-card pixel-press">
+	<span class="tool-name">{name}</span>
+	<span class="tool-url"><a  href={url} target="_blank" rel="noopener noreferrer">{url}</a></span>
+	<span class="tool-desc">{desc}</span>
+</span>
+
+<style>
+	.tool-card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		padding: var(--card-pad);
+		border: 2px solid var(--text);
+		border-left: var(--accent-bar) solid var(--accent);
+		background: var(--bg);
+		color: var(--text);
+		text-decoration: none;
+		margin: 0.5rem 0;
+	}
+
+	.tool-card:hover {
+		border-color: var(--accent);
+		border-left-color: var(--accent);
+	}
+
+	.tool-name {
+		font-family: var(--font-pixel);
+		font-size: var(--fs-base);
+		color: var(--accent);
+	}
+
+	.tool-url {
+		font-size: var(--fs-md);
+		color: var(--text-soft);
+	}
+
+	.tool-desc {
+		font-size: var(--fs-md);
+		color: var(--text-soft);
+		line-height: 1.6;
+	}
+</style>

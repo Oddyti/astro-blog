@@ -3,8 +3,8 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const post = defineCollection({
-	// Load Markdown files migrated from the original Hugo blog.
-	loader: glob({ base: './src/content/post', pattern: '**/*.md' }),
+	// Load Markdown/MDX files migrated from the original Hugo blog.
+	loader: glob({ base: './src/content/post', pattern: '**/*.{md,mdx}' }),
 	// Type-check frontmatter using a schema.
 	schema: ({ image }) =>
 		z.object({

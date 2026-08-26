@@ -1,5 +1,6 @@
 // @ts-check
 import { unified } from '@astrojs/markdown-remark';
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import pagefind from 'astro-pagefind';
@@ -21,5 +22,5 @@ export default defineConfig({
 			theme: 'vitesse-light',
 		},
 	},
-	integrations: [sitemap(), pagefind()],
+	integrations: [sitemap(), pagefind(), mdx()],
 });
