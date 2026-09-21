@@ -135,6 +135,7 @@
 	opacity: 0.5;
 }
 
+/* 正文图片不加描边：带透明背景的图片需要直接透出页面背景 */
 .prose img {
 	display: block;
 	margin-left: auto;
@@ -143,7 +144,6 @@
 	max-width: 100%;
 	height: auto;
 	max-height: 70vh;
-	border: 2px solid var(--text);
 }
 
 .prose table {
