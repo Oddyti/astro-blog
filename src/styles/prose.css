@@ -117,6 +117,8 @@
 	border-left: 6px solid var(--accent);
 	background: var(--bg-soft);
 	color: var(--text);
+	font-size: var(--fs-md);
+	line-height: 1.6;
 }
 
 .prose blockquote p {

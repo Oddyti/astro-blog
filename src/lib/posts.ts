@@ -5,7 +5,8 @@ export type Post = CollectionEntry<'post'>;
 export async function getAllPosts(): Promise<Post[]> {
 	const posts = await getCollection('post');
 	return posts
-		.filter((post) => !post.data.draft)
+		// 草稿只在本地 dev 可见（含路由与列表），生产构建一律排除
+		.filter((post) => import.meta.env.DEV || !post.data.draft)
 		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
