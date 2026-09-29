@@ -8,8 +8,9 @@ const posts = await getAllPosts();
 const tags = getTagCounts(posts);
 ---
 
-<BaseLayout title={`标签 | ${SITE_TITLE}`} description="分类看不懂的话，来这儿看看">
-	<h1 class="page-title">标签</h1>
+<BaseLayout title={`标签 | ${SITE_TITLE}`} description="分类太粗，标签太细，这里是我写过的所有话题">
+	<h1 class="page-title page-title--tight">标签</h1>
+	<p class="description">四个分类太粗，标签又太细，这里是我写过的话题和它们出现的次数。其中「随笔」是认真思考后落下的文字，「碎碎念」是不那么正式的随笔，也算随笔的一种。</p>
 	<ul class="tag-list">
 		{
 			tags.map(([tag, count]) => (
@@ -61,5 +62,12 @@ const tags = getTagCounts(posts);
 		font-size: var(--fs-xs);
 		color: var(--text-soft);
 		font-variant-numeric: tabular-nums;
+	}
+
+	/* 与分类页的说明文字保持一致 */
+	.description {
+		margin: 0 0 1.2rem;
+		color: var(--text-soft);
+		font-size: var(--fs-md);
 	}
 </style>

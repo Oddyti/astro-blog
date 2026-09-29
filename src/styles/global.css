@@ -49,6 +49,8 @@
 	--rail-width: 220px;
 	--layout-cap: 1360px;
 	--header-h: 70px;
+	/* 文章封面高度上限，比正文图片的 70vh 更紧，避免首屏全被封面占满 */
+	--cover-max-height: 45vh;
 	--pixel-text-shadow: 2px 2px 0 rgba(38, 70, 83, 0.2);
 	--card-pad: 0.9rem 1.1rem;
 	--accent-bar: 6px;
