@@ -2,14 +2,14 @@
 title: '杂谈写作三步法（转载）'
 date: 2026-09-29T13:25:00+08:00
 draft: false
-description: 'STN屎蛋分享的写作方法：先用两个观点定起点和终点，再修一条路，最后看别人走得怎么样。存档自用。'
+description: 'STN屎蛋分享的写作方法。'
 slug: 'writing-three-steps'
 tags: ['写作', '转载']
 categories: ['递手']
 image: ''
 ---
 
-> 转载自 STN屎蛋：[杂谈写作三步法](https://www.kdocs.cn/l/cnybCjqsAirr)（原文档见链接）。这里只是搬运存档自用，内容未作改动。
+> 转载自 STN屎蛋：[杂谈写作三步法](https://www.kdocs.cn/l/cnybCjqsAirr)（原文档见链接）。搬运存档自用，内容未作改动。
 
 ## 总纲
 
