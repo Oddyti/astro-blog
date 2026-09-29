@@ -13,10 +13,13 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-	margin: 0.6em 0 0.6em;
-	line-height: 1.4;
-	font-weight: 400;
-	font-family: var(--font-pixel);
+	/* 上下间距一致，且与段落的 1.2em 对齐：
+	   标题就是"略重的段落分隔"，不额外制造孤立感 */
+	margin: 1.2em 0;
+	line-height: 1.45;
+	/* 中文标题用系统字体：点阵字体放大后笔画会粘连，长标题尤其明显 */
+	font-family: var(--font-sans);
+	font-weight: 600;
 	color: var(--text);
 	scroll-margin-top: calc(var(--header-h) + 1.5rem);
 }
@@ -44,47 +47,37 @@
 	font-size: var(--fs-base);
 }
 
-/* 各级标题前的 H1/H2... 像素标签标记 */
-.prose h1::before {
-	content: 'H1';
-}
-
-.prose h2::before {
-	content: 'H2';
-}
-
-.prose h3::before {
-	content: 'H3';
-}
-
-.prose h4::before {
-	content: 'H4';
-}
-
-.prose h5::before {
-	content: 'H5';
-}
-
-.prose h6::before {
-	content: 'H6';
-}
-
+/* 标题层级标识。
+   不用 H1/H2 这类字样：文章页的标题从 h2 起跳，标"真实级数"对读者没有意义，
+   按 Markdown 源码的 # 数量标又会与页面结构错位。改用「形状 + 字号 + 字重」
+   表达层级——h2 一个实心方块，h3 一道短横，越深越轻。 */
 .prose h1::before,
-.prose h2::before,
+.prose h2::before {
+	content: '';
+	display: inline-block;
+	width: 0.5em;
+	height: 0.5em;
+	margin-right: 0.5em;
+	background: var(--accent);
+	vertical-align: 0.06em;
+}
+
 .prose h3::before,
 .prose h4::before,
 .prose h5::before,
 .prose h6::before {
-	display: inline-flex;
-	align-items: center;
-	margin-right: 0.6em;
-	padding: 0.08em 0.5em;
-	font-family: var(--font-pixel);
-	font-size: 1em;
-	line-height: 1;
-	color: var(--bg);
+	content: '';
+	display: inline-block;
+	width: 0.65em;
+	height: 2px;
+	margin-right: 0.5em;
 	background: var(--accent);
-	border: 2px solid var(--accent);
+	vertical-align: 0.3em;
+}
+
+.prose h5::before,
+.prose h6::before {
+	background: var(--text-soft);
 }
 
 .prose p {
@@ -98,12 +91,30 @@
 }
 
 .prose li {
-	margin-bottom: 0.3em;
+	margin-bottom: 0.55em; /* 列表项之间留呼吸，密排时易读性差 */
 }
 
-/* 正文链接：像素下划线，hover 高亮（全局 a:hover 已做背景块） */
+.prose li::marker {
+	color: var(--text-soft); /* 项目符号用弱色：强调色留给标题，避免青色堆积 */
+}
+
+/* 有序列表的序号仍需要一点区分度 */
+.prose ol li::marker {
+	color: var(--link);
+	font-family: var(--font-pixel);
+	font-size: 0.9em;
+}
+
+/* 正文链接：下划线 + hover 背景高亮（全局 a:hover 已做背景块）。
+   文字色单独覆盖——全局 a 用的是 --accent，对比度只有 3.05:1，不达 AA。
+   下划线用 text-decoration 而非 inset box-shadow：box-shadow 只能落在盒子底部，
+   汉字的下伸笔画会与它相接、糊在一起；text-underline-offset 才推得开。 */
 .prose a {
-	box-shadow: inset 0 -3px 0 var(--accent-soft);
+	color: var(--link);
+	text-decoration: underline;
+	text-decoration-color: var(--link);
+	text-decoration-thickness: 2px;
+	text-underline-offset: 3px;
 }
 
 .prose a:hover {
@@ -112,13 +123,23 @@
 
 .prose blockquote {
 	margin: 1.4em 0;
-	padding: 0.75em 1.2em;
-	border: 2px solid var(--text);
-	border-left: 6px solid var(--accent);
+	padding: 0.7em 1.1em;
+	/* 只留左侧一道细线作为"这是引用"的信号，去掉四周边框——
+	   引用块不是要强调的对象，四边框会让它比正文还重 */
+	border: none;
+	border-left: 3px solid var(--accent);
 	background: var(--bg-soft);
 	color: var(--text);
 	font-size: var(--fs-md);
-	line-height: 1.6;
+	line-height: 1.7;
+}
+
+/* 嵌套引用：内层不再叠加背景与竖线，避免"框中框"越套越重 */
+.prose blockquote blockquote {
+	margin: 0.6em 0;
+	padding: 0 0 0 0.9em;
+	background: transparent;
+	border-left: 2px solid var(--border);
 }
 
 .prose blockquote p {
@@ -126,15 +147,17 @@
 }
 
 .prose hr {
+	/* 小方块虚线：保留站内"方角、硬边"的语言。
+	   2px 高、方块 4/12 间距；半透明但足够清晰，不与正文争夺注意力 */
 	border: none;
-	height: 10px;
-	margin: 2.5em 0;
+	height: 2px;
+	margin: 1.2em 0;
 	background-image: repeating-linear-gradient(
 		to right,
-		var(--text-soft) 0 8px,
-		transparent 8px 20px
+		var(--text-soft) 0 4px,
+		transparent 4px 12px
 	);
-	opacity: 0.5;
+	opacity: 0.6;
 }
 
 /* 正文图片不加描边：带透明背景的图片需要直接透出页面背景 */
@@ -157,29 +180,33 @@
 
 .prose th,
 .prose td {
-	border: 2px solid var(--border);
+	/* 与引用块/代码块用同一档描边色：避免同类元素出现不同"笔画重量" */
+	border: 2px solid var(--prose-border);
 	padding: 0.45em 0.8em;
 	text-align: left;
 }
 
 .prose th {
 	background: var(--bg-soft);
-	font-family: var(--font-pixel);
-	font-weight: 400;
+	font-weight: 600;
 }
 
 .prose code {
 	font-family: var(--font-mono);
 	font-size: 0.88em;
-	padding: 0.15em 0.4em;
-	background: var(--bg-soft);
-	border: 2px solid var(--border);
+	/* 行内代码只需一点底色把它和正文区分开，不要描边——
+	   描边会让每个代码片段都变成一个"小盒子"，打断句子的阅读流 */
+	padding: 0.1em 0.3em;
+	background: var(--border);
+	border: none;
 }
 
 .prose pre {
 	margin: 1.4em 0;
 	padding: 1.1em 1.3em;
-	border: 2px solid var(--text);
+	/* 与行内代码同一套语言：底色区分、不加描边 */
+	background: var(--bg-soft);
+	border: none;
 	overflow-x: auto;
 	line-height: 1.6;
 }
@@ -197,7 +224,7 @@
 	width: 100%;
 	aspect-ratio: 16 / 9;
 	margin: 1.4em 0;
-	border: 2px solid var(--text);
+	border: 2px solid var(--prose-border);
 	overflow: hidden;
 }
 

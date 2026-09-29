@@ -35,8 +35,14 @@
 	--text: #264653;
 	--text-soft: #6b7a80;
 	--border: #dddde8;
+	/* 正文块级元素（引用/代码/表格）的统一描边色：
+	   比 --border 深一点以保证可见，比 --text 浅一点以免过重 */
+	--prose-border: #b9c0cc;
 	--accent: #2c9d8f;
 	--accent-soft: rgba(44, 157, 143, 0.13);
+	/* 正文链接与有序列表序号用色：比 --accent 更深更饱和。
+	   --accent 明度偏高、色相偏青，用作文字/下划线时视觉上发灰不显眼 */
+	--link: #0d7d70;
 	--font-sans:
 		-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
 		'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC',
@@ -363,7 +369,8 @@ main.layout .sidebar {
 }
 
 /* 站点级标题基础（页面标题等），文章正文标题由 prose.css 覆盖。
-   统一使用像素字体 */
+   统一使用像素字体；不加像素阴影——标题是阅读的骨架，
+   2px 硬阴影会让字缘发糊，反而降低可读性 */
 h1,
 h2,
 h3,
@@ -375,7 +382,6 @@ h6 {
 	font-weight: 400;
 	font-family: var(--font-pixel);
 	color: var(--text);
-	text-shadow: var(--pixel-text-shadow);
 }
 
 h1 {
