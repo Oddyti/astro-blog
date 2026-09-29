@@ -4,7 +4,7 @@ date: 2024-01-26T21:20:28+08:00
 draft: false
 description: '记录第一次爬午潮山'
 slug: 'wuchao'
-tags: ['徒步','午潮山']
+tags: ['徒步']
 categories: ['闲逛']
 image: '呆坐3.jpg'
 

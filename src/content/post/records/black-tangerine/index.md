@@ -4,7 +4,7 @@ date: 2025-02-28T16:34:34+08:00
 draft: false
 description: '初中时在班主任车上的四十公里山路，一首藏在记忆里的专辑，多年后的寻找与重逢'
 slug: 'black-tangerine'
-tags: ['音乐', '回忆', '陶喆']
+tags: ['音乐', '回忆']
 categories: ['出神']
 image: ''
 ---

@@ -4,7 +4,7 @@ date: 2024-01-05T16:34:27+08:00
 draft: false
 description: '读《怎样欣赏音乐》时的一些感想，同时也是西方音乐艺术课程的结课小论文。'
 slug: 'listen-music'
-tags: ['乐理']
+tags: ['音乐', '随笔']
 categories: ['出神']
 image: ''
 ---

@@ -4,7 +4,7 @@ date: 2023-12-06T22:57:11+08:00
 draft: false
 description: '学习JS时的笔记'
 slug: 'js-study'
-tags: ['JavaScript']
+tags: ['技术']
 categories: ['行囊']
 image: 'JS.png'
 ---

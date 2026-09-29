@@ -4,7 +4,7 @@ date: 2024-09-21T10:41:40+08:00
 draft: false
 description: '北野武导演的《那年夏天，宁静的海》观后感'
 slug: 'a-scene-at-the-sea'
-tags: ['电影', '那年夏天宁静的海', '影评', '北野武']
+tags: ['影视']
 categories: ['出神']
 image: 'poster-resize.jpg'
 

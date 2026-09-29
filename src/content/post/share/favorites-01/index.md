@@ -4,7 +4,7 @@ date: 2026-09-21T14:30:00+08:00
 draft: false
 description: '记录一些经过时间考验后留在我身边的好物'
 slug: 'favorites-01'
-tags: ['好物', '记录', '生活']
+tags: ['生活']
 categories: ['递手']
 image: ''
 ---

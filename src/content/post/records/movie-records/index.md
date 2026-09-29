@@ -4,7 +4,7 @@ date: 2024-09-21T10:41:40+08:00
 draft: false
 description: '记录一下近些年看过的一些印象深刻的电影。以及记录一些待看清单。'
 slug: 'movie-records'
-tags: ['电影']
+tags: ['影视']
 categories: ['闲逛']
 image: ''
 

@@ -4,7 +4,7 @@ date: 2025-02-24T21:14:04+08:00
 draft: false
 description: '学习Java线程池(Thread Pool)的总结，主要包括ThreadPoolExecutor类的介绍，Excutors类介绍'
 slug: 'thread-pool'
-tags: ['JAVA']
+tags: ['技术']
 categories: ['行囊']
 image: ''
 ---

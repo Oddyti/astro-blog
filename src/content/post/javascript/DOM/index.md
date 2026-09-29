@@ -4,7 +4,7 @@ date: 2023-12-11T13:42:37+08:00
 draft: false
 description: '学习DOM时的笔记'
 slug: 'DOM-study'
-tags: ['DOM']
+tags: ['技术']
 categories: ['行囊']
 image: ''
 ---

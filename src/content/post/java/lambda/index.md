@@ -4,7 +4,7 @@ date: 2025-02-18T12:24:57+08:00
 draft: false
 description: '如题'
 slug: 'lambda'
-tags: ['JAVA']
+tags: ['技术']
 categories: ['行囊']
 image: ''
 ---

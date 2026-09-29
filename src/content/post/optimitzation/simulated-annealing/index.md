@@ -4,7 +4,7 @@ date: 2023-10-30T14:44:26+08:00
 draft: false
 description: '最优理论算法课程作业'
 slug: 'simulated-annealing'
-tags: ['最优化算法','退火算法']
+tags: ['算法']
 categories: ['行囊']
 image: ''
 

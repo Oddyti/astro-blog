@@ -4,7 +4,7 @@ date: 2024-01-18T16:49:04+08:00
 draft: false
 description: '整理了一下收藏之后就每怎么看过的但是感觉很有趣或者引发思考或者值得学习的一些回答'
 slug: 'zhihu'
-tags: ['知乎','常看常新']
+tags: ['阅读']
 categories: ['递手']
 image: ''
 ---

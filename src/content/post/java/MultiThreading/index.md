@@ -4,7 +4,7 @@ date: 2025-02-20T17:31:03+08:00
 draft: false
 description: '学习Java多线程的总结'
 slug: 'multi-threading'
-tags: ['JAVA']
+tags: ['技术']
 categories: ['行囊']
 image: ''
 ---

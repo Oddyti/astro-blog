@@ -4,7 +4,7 @@ date: 2023-10-29T15:46:19+08:00
 draft: false
 description: '记录了在搭建整个博客以及自定义时遇到的问题和解决方法'
 slug: 'hugo-problems'
-tags: ['Hugo']
+tags: ['环境配置']
 categories: ['行囊']
 image: 'cover.jpg'
 ---

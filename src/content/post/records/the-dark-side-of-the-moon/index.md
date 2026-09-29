@@ -4,7 +4,7 @@ date: 2026-01-21T21:00:00+08:00
 draft: false
 description: '从前第一次听时只觉得震撼，最近闲来无事，重新认真听一篇，记录了一下听时的感受'
 slug: 'the-dark-side-of-the-moon'
-tags: ['音乐', '专辑', 'Pink Floyd']
+tags: ['音乐']
 categories: ['出神']
 image: ''
 

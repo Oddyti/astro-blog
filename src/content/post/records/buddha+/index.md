@@ -4,7 +4,7 @@ date: 2022-09-13T20:37:52+08:00
 draft: false
 description: '观看于22年秋，看完《大佛普拉斯》后的一些想法'
 slug: 'buddha+'
-tags: ['电影','大佛普拉斯','影评']
+tags: ['影视']
 categories: ['出神']
 image: ''
 

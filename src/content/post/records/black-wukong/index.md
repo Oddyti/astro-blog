@@ -4,7 +4,7 @@ date: 2024-09-13T22:53:35+08:00
 draft: false
 description: '通关之后的一些碎片感想'
 slug: 'BMW'
-tags: ['游戏','黑神话：悟空']
+tags: ['游戏']
 categories: ['出神']
 image: 'concept.jpg'
 

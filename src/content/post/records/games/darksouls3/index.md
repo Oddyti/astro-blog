@@ -4,7 +4,7 @@ date: 2023-08-15T23:46:23+08:00
 draft: false
 description: '太阳战士以死明志助我击败了吞噬黑暗的米狄尔'
 slug: 'game-ds3'
-tags: ['游戏','黑暗之魂3']
+tags: ['游戏']
 categories: ['闲逛']
 image: 'ds3.jpg'
 ---

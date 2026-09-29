@@ -4,7 +4,7 @@ date: 2025-11-11T16:40:44+08:00
 draft: false
 description: '关于留长发引发的自我审视与改变的思考'
 slug: 'longhair'
-tags: ['自我察觉']
+tags: ['内观']
 categories: ['出神']
 image: ''
 ---

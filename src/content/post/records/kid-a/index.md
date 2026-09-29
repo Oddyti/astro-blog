@@ -4,7 +4,7 @@ date: 2026-01-22T22:00:00+08:00
 draft: false
 description: '第一次听，记录下感受'
 slug: 'kid-a'
-tags: ['音乐', '专辑', 'Radiohead']
+tags: ['音乐']
 categories: ['出神']
 image: ''
 
