@@ -9,8 +9,13 @@ const post = defineCollection({
 	schema: ({ image }) =>
 		z.object({
 			title: z.string(),
-			// Transform string to Date object.
+			// 创建时间：归档、列表、排序都以它为准
 			date: z.coerce.date(),
+			// 更新时间：可选，仅文章页显示；空字符串视为未填
+			updated: z.preprocess(
+				(value) => (value === '' || value == null ? undefined : value),
+				z.coerce.date().optional(),
+			),
 			draft: z.boolean().default(false),
 			description: z.string().default(''),
 			slug: z.string().default(''),

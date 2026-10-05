@@ -41,19 +41,32 @@ const tags = filterTags(post.data.tags);
 			)}
 			<h1 class="post-title">{post.data.title}</h1>
 			<div class="post-meta">
-				<span class="date">
-					<FormattedDate date={post.data.date} />
-				</span>
-				{categories.map((cat) => (
-					<a class="chip chip-cat" href={categoryPath(cat)}>
-						{cat}
-					</a>
-				))}
-				{tags.map((tag) => (
-					<a class="chip chip-tag" href={tagPath(tag)}>
-						#{tag}
-					</a>
-				))}
+				{/* 第一行：分类/标签 */}
+				{(categories.length > 0 || tags.length > 0) && (
+					<div class="chips">
+						{categories.map((cat) => (
+							<a class="chip chip-cat" href={categoryPath(cat)}>
+								{cat}
+							</a>
+						))}
+						{tags.map((tag) => (
+							<a class="chip chip-tag" href={tagPath(tag)}>
+								#{tag}
+							</a>
+						))}
+					</div>
+				)}
+				{/* 第二行：创建时间 + 更新时间，横向排布 */}
+				<div class="date">
+					<span class="created">
+						创建于 <FormattedDate date={post.data.date} />
+					</span>
+					{post.data.updated && (
+						<span class="updated" title="最后更新">
+							更新于 <FormattedDate date={post.data.updated} />
+						</span>
+					)}
+				</div>
 			</div>
 		</header>
 
@@ -114,18 +127,30 @@ const tags = filterTags(post.data.tags);
 		border-bottom: none;
 	}
 
+	/* 纵向两块：chips 一行，date 一行 */
 	.post-meta {
 		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 0.5rem;
+		flex-direction: column;
+		gap: 0.4rem;
 		font-family: var(--font-pixel);
 		font-size: var(--fs-md);
 		color: var(--text-soft);
 	}
 
+	/* 第一行：分类/标签 */
+	.post-meta .chips {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	/* 第二行：创建时间 + 更新时间横向排布 */
 	.post-meta .date {
-		margin-right: 0.25rem;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem;
 	}
 
 	/* 移动端浮动目录按钮（SlidePanel 触发按钮）+ 侧滑面板内容 */
