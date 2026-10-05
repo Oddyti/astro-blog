@@ -8,6 +8,7 @@ import Toc from '../../components/Toc.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { categoryPath, postSlug, tagPath } from '../../lib/paths';
 import { filterCategories, filterTags, getAllPosts } from '../../lib/posts';
+import Gallery from '../../components/Gallery.astro';
 
 export async function getStaticPaths() {
 	const posts = await getAllPosts();
@@ -20,6 +21,9 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'post'>;
 
 const post = Astro.props;
+// 让正文里的组件（如 Gallery）知道自己在哪篇文章中，
+// 便于按"与 index 同目录"的约定解析图片
+Astro.locals.postId = post.id;
 const { Content, headings } = await render(post);
 const tocHeadings = headings.filter((h) => h.depth >= 2);
 
@@ -54,7 +58,7 @@ const tags = filterTags(post.data.tags);
 		</header>
 
 		<div class="prose">
-			<Content />
+			<Content components={{ Gallery }} />
 		</div>
 	</article>
 

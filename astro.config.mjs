@@ -8,6 +8,7 @@ import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 import remarkBilibili from './src/lib/remark-bilibili.mjs';
 import rehypeExternalImages from './src/lib/rehype-external-images.mjs';
+import { mdxVirtualComponents, recmaMdxAutoImport } from './src/plugins/mdx-auto-import.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,5 +23,10 @@ export default defineConfig({
 			theme: 'vitesse-light',
 		},
 	},
-	integrations: [sitemap(), pagefind(), mdx()],
+	vite: {
+		plugins: [mdxVirtualComponents()],
+	},
+	// recma 插件为每篇 MDX 自动注入常用组件的 import，
+	// 这样正文里可以直接用 <Gallery />，无需手写 import
+	integrations: [sitemap(), pagefind(), mdx({ recmaPlugins: [recmaMdxAutoImport] })],
 });

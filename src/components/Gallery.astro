@@ -1,0 +1,384 @@
+---
+import { getImage } from 'astro:assets';
+
+interface Props {
+	/**
+	 * 要展示的图片文件名（与本文档同目录）。省略则按文件名顺序展示同目录下全部图片。
+	 * 例：names={['01.jpg', '02.jpg']}
+	 */
+	names?: string[];
+	/**
+	 * 当前文章的 entry id（如 'records/wuchao'）。
+	 * 由文章页决定性地传入；在 MDX 里通常不必写。
+	 */
+	postId?: string;
+	/** 每行列数，默认 3 */
+	columns?: number;
+	/** 缩略图边长档位（px），默认 400 */
+	thumbWidth?: number;
+	/** 灯箱大图宽度（px），默认 1600 */
+	fullWidth?: number;
+}
+
+const { names, postId, columns = 3, thumbWidth = 400, fullWidth = 1600 } = Astro.props;
+
+// 约定：图片与 index.mdx 放在同一目录，宫格直接从该目录取图，MDX 里只写文件名。
+//
+// 两个约束决定了下面的写法：
+//   1. import.meta.glob 的模式相对**本组件文件**解析，拿不到"调用它的那篇文档"目录；
+//   2. 生产构建不会保留 glob 的路径键（被映射成内部 id），
+//      所以不能靠 import.meta.url 反推目录。
+// 因此：从项目根扫描全部文章图片，再用内容层的 entry id（其值就是目录路径）锁定本目录。
+// 内容层用动态 import 引入，避免与站点页面争夺同样的导入图。
+const { getCollection } = await import('astro:content');
+
+const files = import.meta.glob<{ default: ImageMetadata }>(
+	'/src/content/post/**/*.{jpg,jpeg,png,webp,avif}',
+	{ eager: true },
+);
+
+// 当前文章 id 由文章页通过 Astro.locals 注入（见 src/pages/post/[...slug].astro），
+// 这样 MDX 里不必写任何额外参数。
+const currentId = postId ?? (Astro.locals as { postId?: string } | undefined)?.postId;
+
+const sameDir = new Map<string, ImageMetadata>();
+const byName = new Map<string, ImageMetadata[]>();
+for (const [path, mod] of Object.entries(files)) {
+	const name = path.split('/').pop() ?? path;
+	if (currentId && path.startsWith(`/src/content/post/${currentId}/`)) {
+		sameDir.set(name, mod.default);
+	}
+	const list = byName.get(name) ?? [];
+	list.push(mod.default);
+	byName.set(name, list);
+}
+
+const available = [...new Set([...sameDir.keys(), ...byName.keys()])].sort();
+const wanted = names?.length ? names : [...sameDir.keys()].sort();
+
+const missing = wanted.filter((n) => !sameDir.has(n) && !byName.has(n));
+if (missing.length) {
+	throw new Error(
+		`Gallery：找不到图片 ${missing.join('、')}。\n` +
+			`  当前文档目录（${currentId ?? '未知'}）下的图片：${[...sameDir.keys()].sort().join('、') || '（无）'}\n` +
+			`  提示：图片需与 index.mdx 放在同一目录。`,
+	);
+}
+
+// 优先取同目录的那张；仅当同目录没有时才回退到全库同名文件
+const picked = wanted.map((n) => sameDir.get(n) ?? byName.get(n)![0]);
+
+// 构建期为每张图生成两档产物：宫格缩略图 + 灯箱大图
+const items = await Promise.all(
+	picked.map(async (src) => {
+		const thumb = await getImage({ src, width: thumbWidth, format: 'webp' });
+		const full = await getImage({ src, width: fullWidth, format: 'webp' });
+		return { thumb: thumb.src, full: full.src, w: src.width, h: src.height };
+	}),
+);
+---
+
+<div class="gallery" style={`--cols: ${columns}`}>
+	{
+		items.map((item, i) => (
+			<button type="button" class="cell" data-full={item.full} aria-label={`查看第 ${i + 1} 张图`}>
+				<img src={item.thumb} width={item.w} height={item.h} alt="" loading="lazy" decoding="async" />
+			</button>
+		))
+	}
+</div>
+
+<dialog class="lightbox">
+	<figure>
+		<!-- 不预置 src：大图只在打开灯箱时才注入，
+		     否则整组大图会在页面加载时被一并下载 -->
+		<img class="lb-img" alt="" />
+		<figcaption class="lb-count"></figcaption>
+	</figure>
+	<button type="button" class="lb-prev" aria-label="上一张">
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+			<path d="M15 5l-7 7 7 7"></path>
+		</svg>
+	</button>
+	<button type="button" class="lb-next" aria-label="下一张">
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+			<path d="M9 5l7 7-7 7"></path>
+		</svg>
+	</button>
+</dialog>
+
+<style>
+	.gallery {
+		display: grid;
+		grid-template-columns: repeat(var(--cols, 3), 1fr);
+		gap: 5px;
+		margin: 1.4em 0;
+	}
+
+	.cell {
+		display: block;
+		padding: 0;
+		margin: 0;
+		border: none;
+		background: var(--bg-soft);
+		cursor: zoom-in;
+		overflow: hidden;
+		aspect-ratio: 1;
+	}
+
+	.cell :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.15s steps(3);
+	}
+
+	.cell:hover :global(img) {
+		transform: scale(1.03);
+	}
+
+	.cell:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	/* ---- 灯箱（原生 dialog：自带 Esc 关闭与焦点捕获） ---- */
+	.lightbox {
+		padding: 0;
+		border: none;
+		background: transparent;
+		max-width: none;
+		max-height: none;
+		overflow: visible;
+	}
+
+	.lightbox::backdrop {
+		background: rgba(20, 26, 30, 0.86);
+	}
+
+	.lightbox figure {
+		margin: 0;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* 左右各留出按钮区（1rem 边距 + 44px 按钮 + 0.75rem 间隙），
+	   否则宽图会被两侧的翻页按钮压住 */
+	.lightbox :global(.lb-img) {
+		display: block;
+		max-width: calc(100vw - 9.5rem);
+		max-height: 86vh;
+		width: auto;
+		height: auto;
+		border: 2px solid var(--border);
+		background: var(--bg);
+	}
+
+	/* 滑动翻页的第一帧：图片跟着手指偏移，松手后滑出并复位 */
+	.lightbox.flipping :global(.lb-img) {
+		transition: transform 0.18s ease-out;
+	}
+
+	.lb-count {
+		position: absolute;
+		left: 50%;
+		bottom: -2.2rem;
+		transform: translateX(-50%);
+		font-family: var(--font-pixel);
+		font-size: var(--fs-sm);
+		color: #f5f5fa;
+		opacity: 0.75;
+		white-space: nowrap;
+	}
+
+	/* 无关闭按钮：点空白处或 Esc 退出（移动端点空白也可） */
+
+	.lb-prev,
+	.lb-next {
+		position: fixed;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		color: #f5f5fa;
+		background: rgba(20, 26, 30, 0.6);
+		border: 2px solid rgba(245, 245, 250, 0.35);
+		cursor: pointer;
+	}
+
+	.lb-prev:hover,
+	.lb-next:hover {
+		background: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.lb-prev svg,
+	.lb-next svg {
+		width: 22px;
+		height: 22px;
+	}
+
+	.lb-prev {
+		left: 1rem;
+		top: 50%;
+		margin-top: -22px;
+	}
+
+	.lb-next {
+		right: 1rem;
+		top: 50%;
+		margin-top: -22px;
+	}
+
+	/* 触屏：隐藏翻页按钮，改为左右滑动切换；
+	   touch-action 交给 JS 按方向决定，故不在这里固定 */
+	@media (pointer: coarse) {
+		.lb-prev,
+		.lb-next {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	// 同一页可能有多组宫格，各自绑定紧随其后的 dialog
+	document.querySelectorAll<HTMLElement>('.gallery').forEach((gallery) => {
+		const dialog = gallery.nextElementSibling as HTMLDialogElement | null;
+		if (!dialog || dialog.tagName !== 'DIALOG') return;
+
+		const cells = [...gallery.querySelectorAll<HTMLButtonElement>('.cell')];
+		const img = dialog.querySelector<HTMLImageElement>('.lb-img');
+		const count = dialog.querySelector<HTMLElement>('.lb-count');
+		const prev = dialog.querySelector<HTMLButtonElement>('.lb-prev');
+		const next = dialog.querySelector<HTMLButtonElement>('.lb-next');
+		const fulls = cells.map((c) => c.dataset.full ?? '');
+
+		let current = 0;
+
+		const show = (i: number) => {
+			current = (i + cells.length) % cells.length;
+			if (img) img.src = fulls[current];
+			if (count) count.textContent = `${current + 1} / ${cells.length}`;
+			// 单张时无页可翻；触屏下按钮另有 CSS 隐藏
+			const solo = cells.length < 2;
+			if (prev) prev.hidden = solo;
+			if (next) next.hidden = solo;
+		};
+
+		cells.forEach((cell, i) => {
+			cell.addEventListener('click', () => {
+				show(i);
+				dialog.showModal();
+			});
+		});
+
+		prev?.addEventListener('click', (e) => {
+			e.stopPropagation();
+			show(current - 1);
+		});
+		next?.addEventListener('click', (e) => {
+			e.stopPropagation();
+			show(current + 1);
+		});
+
+		// 点图片以外的空白处关闭
+		dialog.addEventListener('click', (e) => {
+			if (e.target === dialog) dialog.close();
+		});
+
+		// 左右方向键翻页；Esc 由 dialog 原生处理
+		dialog.addEventListener('keydown', (e) => {
+			if (e.key === 'ArrowLeft') show(current - 1);
+			if (e.key === 'ArrowRight') show(current + 1);
+		});
+
+		// ---- 触屏手势 ----
+		// 横向滑动翻页；竖向滑动不拦（浏览器可滚动页面）；轻点空白关闭。
+		// 不写死 touch-action：按下后按首个移动方向决定，避免拦掉竖向滚动。
+		let startX = 0;
+		let startY = 0;
+		let lastX = 0;
+		let axis: 'x' | 'y' | null = null;
+		let movedX = false;
+
+		dialog.addEventListener(
+			'touchstart',
+			(e) => {
+				const t = e.touches[0];
+				if (!t) return;
+				startX = lastX = t.clientX;
+				startY = t.clientY;
+				axis = null;
+				movedX = false;
+			},
+			{ passive: true },
+		);
+
+		dialog.addEventListener(
+			'touchmove',
+			(e) => {
+				const t = e.touches[0];
+				if (!t) return;
+				lastX = t.clientX;
+				const dx = t.clientX - startX;
+				const dy = t.clientY - startY;
+				if (!axis) {
+					if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return; // 阈值内的微动不算方向
+					axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+					// 判定为横向后接管后续手势，避免 iOS 的整页横向滑动
+					if (axis === 'x') dialog.style.touchAction = 'none';
+				}
+				if (axis === 'x') {
+					if (!movedX) movedX = true;
+					e.preventDefault();
+				}
+			},
+			{ passive: false },
+		);
+
+		// 滑动翻页的过渡：先把当前图滑出，再换图从另一侧滑入
+		function flip(dir: 1 | -1) {
+			if (!img || !dialog || cells.length < 2 || dialog.classList.contains('flipping')) return;
+			dialog.classList.add('flipping');
+			img.style.transform = `translateX(${dir * -45}%)`;
+
+			const onOut = () => {
+				img.removeEventListener('transitionend', onOut);
+				show(current + dir);
+				// 先无过渡地摆到入场位置，避免看到跳变
+				dialog.classList.remove('flipping');
+				img.style.transform = `translateX(${dir * 45}%)`;
+				void img.offsetWidth;
+				// 下一帧再开过渡滑回
+				requestAnimationFrame(() => {
+					dialog.classList.add('flipping');
+					img.style.transform = 'translateX(0)';
+					const onIn = () => {
+						img.removeEventListener('transitionend', onIn);
+						dialog.classList.remove('flipping');
+					};
+					img.addEventListener('transitionend', onIn, { once: true });
+				});
+			};
+
+			img.addEventListener('transitionend', onOut, { once: true });
+		}
+
+		dialog.addEventListener('touchend', () => {
+			const dx = lastX - startX;
+			dialog.style.touchAction = '';
+			if (axis === 'x' && movedX && Math.abs(dx) > 40) {
+				flip(dx < 0 ? 1 : -1);
+			} else if (img) {
+				// 未达阈值：让位移平滑回位
+				img.style.transform = 'translateX(0)';
+			}
+			axis = null;
+		});
+	});
+</script>
