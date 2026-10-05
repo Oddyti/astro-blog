@@ -160,6 +160,19 @@
 	opacity: 0.6;
 }
 
+/* 图片加载中的骨架占位。
+   用 background-image 而非 background-color：图片是替换元素，
+   加载完成后其内容会盖住底图，因此不会出现"已加载还闪一下骨架"。
+   底部红色条是主题里已有的"还在加载"颜色。 */
+@keyframes img-placeholder {
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 24px 0;
+	}
+}
+
 /* 正文图片不加描边：带透明背景的图片需要直接透出页面背景 */
 .prose img {
 	display: block;
@@ -169,6 +182,13 @@
 	max-width: 100%;
 	height: auto;
 	max-height: 70vh;
+	background-image: repeating-linear-gradient(
+		45deg,
+		var(--bg-soft) 0 6px,
+		transparent 6px 12px
+	);
+	background-color: var(--bg-soft);
+	animation: img-placeholder 0.8s linear infinite;
 }
 
 .prose table {
