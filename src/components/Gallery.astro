@@ -3,10 +3,14 @@ import { getImage } from 'astro:assets';
 
 interface Props {
 	/**
-	 * 要展示的图片文件名（与本文档同目录）。省略则按文件名顺序展示同目录下全部图片。
-	 * 例：names={['01.jpg', '02.jpg']}
+	 * 要展示的图片。省略则按文件名顺序展示同目录下全部图片。
+	 *
+	 * 三种写法（从简到全）：
+	 *   1. 区间：names="01-06.jpg"        —— 同前缀连续编号，最省事
+	 *   2. 字符串：names="01.jpg 03.jpg"  —— 空格/换行分隔
+	 *   3. 数组：names={['01.jpg', '03.jpg']}
 	 */
-	names?: string[];
+	names?: string | string[];
 	/**
 	 * 当前文章的 entry id（如 'records/wuchao'）。
 	 * 由文章页决定性地传入；在 MDX 里通常不必写。
@@ -21,6 +25,33 @@ interface Props {
 }
 
 const { names, postId, columns = 3, thumbWidth = 400, fullWidth = 1600 } = Astro.props;
+
+/** 把 "01-06.jpg" 展开成 01.jpg…06.jpg；不是区间则原样返回 */
+function expandRange(token: string): string[] {
+	const m = token.match(/^(.*?)(\d+)\s*-\s*(\d+)(\.[A-Za-z0-9]+)$/);
+	if (!m) return [token];
+	const [, prefix, from, to, ext] = m;
+	const start = Number(from);
+	const end = Number(to);
+	if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) return [token];
+	// 保留原编号的位宽（01 → 2 位）
+	const width = from.length;
+	const out: string[] = [];
+	for (let i = start; i <= end; i++) {
+		out.push(`${prefix}${String(i).padStart(width, '0')}${ext}`);
+	}
+	return out;
+}
+
+/** 统一成文件名数组 */
+function parseNames(input: string | string[] | undefined): string[] | undefined {
+	if (!input) return undefined;
+	const tokens = Array.isArray(input)
+		? input
+		: input.split(/[\s,，、]+/).filter(Boolean);
+	const out = tokens.flatMap((t) => expandRange(String(t).trim())).filter(Boolean);
+	return out.length ? out : undefined;
+}
 
 // 约定：图片与 index.mdx 放在同一目录，宫格直接从该目录取图，MDX 里只写文件名。
 //
@@ -54,7 +85,8 @@ for (const [path, mod] of Object.entries(files)) {
 }
 
 const available = [...new Set([...sameDir.keys(), ...byName.keys()])].sort();
-const wanted = names?.length ? names : [...sameDir.keys()].sort();
+const requested = parseNames(names);
+const wanted = requested?.length ? requested : [...sameDir.keys()].sort();
 
 const missing = wanted.filter((n) => !sameDir.has(n) && !byName.has(n));
 if (missing.length) {
